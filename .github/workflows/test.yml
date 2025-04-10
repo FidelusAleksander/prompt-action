@@ -11,16 +11,26 @@ permissions:
   models: read
 
 jobs:
-  test-action:
-    name: Test Action
+  test-action-prompt:
+    name: Test Action with Prompt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Test action functionality
+      - name: Test action
         id: test
         uses: ./
         with:
           prompt: "What is the meaning of life?"
+
+  test-action-prompt-file:
+    name: Test Action with Prompt File
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test action
+        uses: ./
+        with:
+          prompt-file: ".github/prompts/ai.md"
 
   test-typescript:
     name: TypeScript Unit Tests
