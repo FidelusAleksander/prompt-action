@@ -1,4 +1,7 @@
-export async function generateAIResponse(prompt: string): Promise<string> {
-  // TODO: Implement OpenAI integration
-  return `Mock response to: ${prompt}`;
+export async function generateAIResponse(
+  prompt: string,
+  model: string,
+): Promise<string> {
+  // TODO: Implement AI integration
+  return `Mock response to: ${prompt} using model: ${model}`;
 }

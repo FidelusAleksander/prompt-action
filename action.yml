@@ -10,6 +10,10 @@ inputs:
     description: >
       What do you want to ask?
     required: true
+  model:
+    description: >
+      The AI model to use for generating the response
+    default: "gpt-4o"
 outputs:
   text:
     description: >

@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0",
-    "dotenv": "^16.4.7"
+    "@actions/github": "^6.0.0"
   }
 }
