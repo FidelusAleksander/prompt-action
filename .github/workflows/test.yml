@@ -1,6 +1,8 @@
-name: Test Action
+name: Run Tests
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -9,14 +11,25 @@ permissions:
   models: read
 
 jobs:
-  test:
+  test-action:
+    name: Test Action
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Self test
+      - name: Test action functionality
         id: test
         uses: ./
         with:
           prompt: "What is the meaning of life?"
-      - run: |
-          echo "Answer: ${{ steps.test.outputs.text }}"
+
+  test-typescript:
+    name: TypeScript Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm test
