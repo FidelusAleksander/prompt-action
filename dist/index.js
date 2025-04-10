@@ -73,12 +73,27 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
+const fs = __importStar(__nccwpck_require__(9896));
 const ai_1 = __nccwpck_require__(8391);
 async function run() {
     try {
-        const prompt = core.getInput("prompt", { required: true });
+        const promptFile = core.getInput("prompt-file");
+        const promptText = core.getInput("prompt");
         const token = core.getInput("token", { required: true });
         const model = core.getInput("model", { required: true });
+        let prompt;
+        if (promptFile) {
+            if (!fs.existsSync(promptFile)) {
+                throw new Error(`Prompt file not found: ${promptFile}`);
+            }
+            prompt = fs.readFileSync(promptFile, "utf8");
+        }
+        else if (promptText) {
+            prompt = promptText;
+        }
+        else {
+            throw new Error("Either 'prompt' or 'prompt-file' input must be provided");
+        }
         // Generate AI response
         console.log(`Prompting ${model} AI model`);
         const response = await (0, ai_1.generateAIResponse)(prompt, model, token);

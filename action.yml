@@ -9,7 +9,11 @@ inputs:
   prompt:
     description: >
       What do you want to ask?
-    required: true
+    required: false
+  prompt-file:
+    description: >
+      Path to a file containing the prompt
+    required: false
   model:
     description: >
       The AI model to use for generating the response
