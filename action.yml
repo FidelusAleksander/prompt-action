@@ -4,7 +4,7 @@ author: "FidelusAleksander"
 inputs:
   github-token:
     description: >
-      Personal access token, can be `${{ secrets.GITHUB_TOKEN }}`
+      Personal access token, can be passed as secrets.GITHUB_TOKEN
     default: ${{ github.token }}
   prompt:
     description: >
