@@ -1,5 +1,5 @@
-import * as core from '@actions/core';
-import * as github from '@actions/github';
+import * as core from "@actions/core";
+import * as github from "@actions/github";
 
 async function run() {
   try {
@@ -13,7 +13,7 @@ async function run() {
     // const myInput = core.getInput('input-name');
 
     // Set output
-    core.setOutput('time', new Date().toTimeString());
+    core.setOutput("text", new Date().toTimeString());
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

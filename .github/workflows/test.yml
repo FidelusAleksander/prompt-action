@@ -1,0 +1,21 @@
+name: Test Action
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Self test
+        id: test
+        uses: ./
+        with:
+          prompt: "What is the meaning of life?"
+      - run: |
+          echo "Answer: ${{ steps.test.outputs.text }}"

@@ -1,6 +1,19 @@
-name: 'TypeScript Action'
-description: 'A GitHub Action built with TypeScript'
-author: 'Your Name'
+name: "Ask AI"
+description: "Ask AI about ... well, anything!"
+author: "FidelusAleksander"
+inputs:
+  github-token:
+    description: >
+      Personal access token, can be `${{ secrets.GITHUB_TOKEN }}`
+    default: ${{ github.token }}
+  prompt:
+    description: >
+      What do you want to ask?
+    required: true
+outputs:
+  text:
+    description: >
+      The answer to your question
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"
