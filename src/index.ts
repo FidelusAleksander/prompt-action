@@ -1,23 +1,23 @@
 import * as core from "@actions/core";
-import * as github from "@actions/github";
+import { generateAIResponse } from "./ai";
 
 async function run() {
   try {
-    // Get the context of the action
-    const context = github.context;
+    const prompt = core.getInput("prompt", { required: true });
+    const token = core.getInput("token", { required: true });
+    const model = core.getInput("model", { required: true });
 
-    // Log the event that triggered the action
-    core.info(`Event that triggered the action: ${context.eventName}`);
+    // Generate AI response
+    console.log(`Prompting ${model} AI model`);
+    const response = await generateAIResponse(prompt, model, token);
 
-    // You can get inputs defined in action.yml using:
-    // const myInput = core.getInput('input-name');
-
-    // Set output
-    core.setOutput("text", new Date().toTimeString());
+    // Set output and log response
+    core.setOutput("text", response);
+    core.startGroup("AI Response");
+    console.log(response);
+    core.endGroup();
   } catch (error) {
-    if (error instanceof Error) {
-      core.setFailed(error.message);
-    }
+    core.setFailed(error instanceof Error ? error.message : String(error));
   }
 }
 

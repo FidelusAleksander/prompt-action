@@ -6,6 +6,7 @@
     "build": "tsc",
     "package": "ncc build dist/index.js -o dist",
     "all": "npm run build && npm run package",
+    "dev": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,12 +14,15 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@github/local-action": "^3.1.4",
     "@types/node": "^22.14.0",
     "@vercel/ncc": "^0.38.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0"
+    "@actions/github": "^6.0.0",
+    "openai": "^4.93.0"
   }
 }
