@@ -1,0 +1,6 @@
+name: 'TypeScript Action'
+description: 'A GitHub Action built with TypeScript'
+author: 'Your Name'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
