@@ -1,22 +1,40 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import { generateAIResponse } from "./ai";
+import * as dotenv from "dotenv";
+
+// Load environment variables from .env file when running locally
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 async function run() {
   try {
-    // Get the context of the action
-    const context = github.context;
+    // Get inputs either from GitHub Actions or environment variables
+    const prompt = process.env.GITHUB_ACTIONS
+      ? core.getInput("prompt", { required: true })
+      : process.env.PROMPT;
 
-    // Log the event that triggered the action
-    core.info(`Event that triggered the action: ${context.eventName}`);
+    if (!prompt) {
+      throw new Error("Prompt is required");
+    }
 
-    // You can get inputs defined in action.yml using:
-    // const myInput = core.getInput('input-name');
+    // Generate AI response
+    const response = await generateAIResponse(prompt);
 
-    // Set output
-    core.setOutput("text", new Date().toTimeString());
+    // Set output or log locally
+    if (process.env.GITHUB_ACTIONS) {
+      core.setOutput("text", response);
+    } else {
+      console.log("Response:", response);
+    }
   } catch (error) {
     if (error instanceof Error) {
-      core.setFailed(error.message);
+      if (process.env.GITHUB_ACTIONS) {
+        core.setFailed(error.message);
+      } else {
+        console.error("Error:", error.message);
+      }
     }
   }
 }
