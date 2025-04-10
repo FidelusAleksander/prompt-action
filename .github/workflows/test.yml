@@ -1,4 +1,4 @@
-name: Test Action
+name: Run Tests
 on:
   push:
     branches: [main]
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   test-action:
-    name: Test Action Integration
+    name: Test Action
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
