@@ -1,12 +1,10 @@
 import { OpenAI } from 'openai';
-import * as core from '@actions/core';
 
 export async function generateAIResponse(
   prompt: string,
   model: string,
+  token: string,
 ): Promise<string> {
-  const token = core.getInput('github-token', { required: true });
-
   const client = new OpenAI({
     baseURL: "https://models.inference.ai.azure.com",
     apiKey: token,
