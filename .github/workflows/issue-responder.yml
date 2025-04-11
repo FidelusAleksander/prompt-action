@@ -11,6 +11,7 @@ jobs:
   respond-to-issue:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Ask AI
         id: ask-ai
         uses: ./
