@@ -13,11 +13,16 @@ on:
         options:
           - v1
 
+permissions:
+  contents: write
+
 jobs:
   tag:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Git config
         run: |
           git config user.name "github-actions[bot]"
