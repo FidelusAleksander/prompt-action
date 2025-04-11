@@ -13,9 +13,6 @@ on:
         options:
           - v1
 
-permissions:
-  contents: write
-
 jobs:
   tag:
     runs-on: ubuntu-latest
