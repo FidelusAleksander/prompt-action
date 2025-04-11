@@ -6,9 +6,19 @@
 
 A GitHub Action that lets you ask AI questions directly in your workflows.
 
-## Basic Usage
+- [Ask AI :robot:](#ask-ai-robot)
+  - [Basic Usage 🚀](#basic-usage-)
+    - [Provide prompt directly](#provide-prompt-directly)
+    - [Load a prompt from a file](#load-a-prompt-from-a-file)
+  - [Permissions 🔒](#permissions-)
+  - [Inputs ⚙️](#inputs-️)
+  - [Outputs 📤](#outputs-)
+  - [Cool examples 🎮](#cool-examples-)
+    - [Respond to Issues](#respond-to-issues)
 
-### Provide prompt directly:
+## Basic Usage 🚀
+
+### Provide prompt directly
 
 ```yaml
 - uses: FidelusAleksander/ask-ai@v1
@@ -16,7 +26,7 @@ A GitHub Action that lets you ask AI questions directly in your workflows.
     prompt: "What is the meaning of life?"
 ```
 
-### Load a prompt from a file:
+### Load a prompt from a file
 
 ```yaml
 - uses: FidelusAleksander/ask-ai@v1
@@ -24,7 +34,7 @@ A GitHub Action that lets you ask AI questions directly in your workflows.
     prompt-file: .github/prompts/my-prompt.md
 ```
 
-## Permissions
+## Permissions 🔒
 
 This actions requires at minimum the following permissions set.
 
@@ -33,7 +43,7 @@ permissions:
   models: read
 ```
 
-## Inputs
+## Inputs ⚙️
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
@@ -44,19 +54,13 @@ permissions:
 
 \* Either `prompt` or `prompt-file` must be provided
 
-## Outputs
+## Outputs 📤
 
 | Output | Description |
 |--------|-------------|
 | `text` | The AI's response to your prompt |
 
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-## Cool examples
+## Cool examples 🎮
 
 Have you come up with a clever use of this action? Open a PR to showcase it here for the world to see!
 
@@ -108,5 +112,3 @@ jobs:
             ${{ steps.ask-ai.outputs.text }}
 
             _This is an automated response from our AI assistant. A human maintainer will review your issue soon._
-
-```
