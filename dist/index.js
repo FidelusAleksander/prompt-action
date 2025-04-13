@@ -9,7 +9,7 @@
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateAIResponse = generateAIResponse;
 const openai_1 = __nccwpck_require__(2583);
-const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers to questions without additional commentary.";
+const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers or solutions without additional commentary.";
 async function generateAIResponse(prompt, model, token) {
     const client = new openai_1.OpenAI({
         baseURL: "https://models.inference.ai.azure.com",

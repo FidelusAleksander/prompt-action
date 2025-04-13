@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 
-const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers to questions without additional commentary.";
+const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers or solutions without additional commentary.";
 
 export async function generateAIResponse(
   prompt: string,
