@@ -1,6 +1,9 @@
 name: "Prompt"
 description: "Prompt AI about... well, anything!"
 author: "FidelusAleksander"
+branding:
+  icon: message-circle
+  color: blue
 inputs:
   token:
     description: >
@@ -23,5 +26,5 @@ outputs:
     description: >
       The answer to your question
 runs:
-  using: "node16"
+  using: "node20"
   main: "dist/index.js"
