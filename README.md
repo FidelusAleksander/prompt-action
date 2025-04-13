@@ -89,11 +89,7 @@ jobs:
         with:
           model: gpt-4o
           prompt: |
-            Respond to this GitHub issue. Your response should be ready to post as a comment. Don't respond with anything other than the comment text.
-
-            AUTHOR: ${{ github.event.issue.user.login }}
-            TITLE: ${{ github.event.issue.title }}
-            DESCRIPTION: ${{ github.event.issue.body }}
+            Respond to a GitHub issue.
 
             Follow these guidelines:
             1. Thank the user for opening the issue
@@ -101,6 +97,11 @@ jobs:
                 - If it's a bug report, ask for any missing information (steps to reproduce, expected vs actual behavior, environment details)
                 - If it's a feature request, acknowledge the idea's value and ask for use cases if none were provided
             3. Sign of as "AI Assistant"
+
+            Issue Details:
+            AUTHOR: ${{ github.event.issue.user.login }}
+            TITLE: ${{ github.event.issue.title }}
+            DESCRIPTION: ${{ github.event.issue.body }}
 
       - name: Comment on issue
         uses: peter-evans/create-or-update-comment@v3
@@ -112,3 +113,33 @@ jobs:
             ${{ steps.prompt.outputs.text }}
 
             _This is an automated response from our AI assistant. A human maintainer will review your issue soon._
+
+### Automatically format PR titles to conventional commits
+
+This action can help enforce conventional commit styling on PR titles.
+
+Ideas for follow up step:
+- comment on the PR with the suggested PR title
+- update the PR title
+
+```yaml
+name: Update PR Title
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  models: read
+
+jobs:
+  update-pr-title:
+    - name: Prompt
+      uses: FidelusAleksander/ai-translate@v1
+      with:
+        prompt: |
+          Modify this PR title to match conventional commit styling:
+
+          ${{ github.event.pull_request.title }}
+
+```
