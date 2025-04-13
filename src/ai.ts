@@ -1,5 +1,7 @@
 import { OpenAI } from "openai";
 
+const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers to questions without additional commentary.";
+
 export async function generateAIResponse(
   prompt: string,
   model: string,
@@ -13,7 +15,10 @@ export async function generateAIResponse(
   try {
     const completion = await client.chat.completions.create({
       model: model,
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: prompt }
+      ],
     });
 
     const response = completion.choices[0]?.message?.content;
