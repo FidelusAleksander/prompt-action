@@ -1,12 +1,12 @@
-# Ask AI :robot:
+# Prompt :robot:
 
-[![Run Tests](https://github.com/FidelusAleksander/ask-ai/actions/workflows/test.yml/badge.svg)](https://github.com/FidelusAleksander/ask-ai/actions/workflows/test.yml)
+[![Run Tests](https://github.com/FidelusAleksander/prompt/actions/workflows/test.yml/badge.svg)](https://github.com/FidelusAleksander/prompt/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/FidelusAleksander/ask-ai)](https://github.com/FidelusAleksander/ask-ai/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/FidelusAleksander/prompt)](https://github.com/FidelusAleksander/prompt/releases)
 
-A GitHub Action that lets you ask AI questions directly in your workflows.
+A GitHub Action that lets you Prompt AI directly in your workflows.
 
-- [Ask AI :robot:](#ask-ai-robot)
+- [Prompt :robot:](#prompt-robot)
   - [Basic Usage 🚀](#basic-usage-)
     - [Provide prompt directly](#provide-prompt-directly)
     - [Load a prompt from a file](#load-a-prompt-from-a-file)
@@ -21,7 +21,7 @@ A GitHub Action that lets you ask AI questions directly in your workflows.
 ### Provide prompt directly
 
 ```yaml
-- uses: FidelusAleksander/ask-ai@v1
+- uses: FidelusAleksander/prompt@v1
   with:
     prompt: "What is the meaning of life?"
 ```
@@ -29,7 +29,7 @@ A GitHub Action that lets you ask AI questions directly in your workflows.
 ### Load a prompt from a file
 
 ```yaml
-- uses: FidelusAleksander/ask-ai@v1
+- uses: FidelusAleksander/prompt@v1
   with:
     prompt-file: .github/prompts/my-prompt.md
 ```
@@ -83,9 +83,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ask AI
-        id: ask-ai
-        uses: ./
+      - name: Prompt AI
+        id: prompt
+        uses: FidelusAleksander/prompt@v1
         with:
           model: gpt-4o
           prompt: |
@@ -109,6 +109,6 @@ jobs:
           body: |
             ## 👋 Hello there!
 
-            ${{ steps.ask-ai.outputs.text }}
+            ${{ steps.prompt.outputs.text }}
 
             _This is an automated response from our AI assistant. A human maintainer will review your issue soon._
