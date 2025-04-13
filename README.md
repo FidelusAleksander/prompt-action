@@ -15,6 +15,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
   - [Outputs 📤](#outputs-)
   - [Cool examples 🎮](#cool-examples-)
     - [Respond to Issues](#respond-to-issues)
+    - [Automatically format PR titles to conventional commits](#automatically-format-pr-titles-to-conventional-commits)
 
 ## Basic Usage 🚀
 
@@ -113,6 +114,7 @@ jobs:
             ${{ steps.prompt.outputs.text }}
 
             _This is an automated response from our AI assistant. A human maintainer will review your issue soon._
+```
 
 ### Automatically format PR titles to conventional commits
 
