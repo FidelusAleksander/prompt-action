@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ask AI
-        id: ask-ai
-        uses: ./
+      - name: Prompt AI
+        id: prompt
+        uses: FidelusAleksander/prompt@v1
         with:
           model: gpt-4o
           prompt: |
@@ -38,6 +38,6 @@ jobs:
           body: |
             ## 👋 Hello there!
 
-            ${{ steps.ask-ai.outputs.text }}
+            ${{ steps.prompt.outputs.text }}
 
             _This is an automated response from our AI assistant. A human maintainer will review your issue soon._

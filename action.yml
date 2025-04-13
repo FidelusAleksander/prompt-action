@@ -1,5 +1,5 @@
-name: "Ask AI"
-description: "Ask AI about ... well, anything!"
+name: "Prompt"
+description: "Prompt AI about... well, anything!"
 author: "FidelusAleksander"
 inputs:
   token:
