@@ -83,7 +83,6 @@ jobs:
   respond-to-issue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - name: Prompt AI
         id: prompt
         uses: FidelusAleksander/prompt@v1
