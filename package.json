@@ -1,6 +1,5 @@
 {
-  "name": "prompt",
-  "version": "1.0.0",
+  "name": "prompt-action",
   "main": "index.js",
   "scripts": {
     "build": "tsc",

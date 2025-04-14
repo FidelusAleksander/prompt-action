@@ -1,12 +1,12 @@
-# Prompt :robot:
+# Prompt Action :robot:
 
-[![Run Tests](https://github.com/FidelusAleksander/prompt/actions/workflows/test.yml/badge.svg)](https://github.com/FidelusAleksander/prompt/actions/workflows/test.yml)
+[![Run Tests](https://github.com/FidelusAleksander/prompt-action/actions/workflows/test.yml/badge.svg)](https://github.com/FidelusAleksander/prompt-action/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/FidelusAleksander/prompt)](https://github.com/FidelusAleksander/prompt/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/FidelusAleksander/prompt-action)](https://github.com/FidelusAleksander/prompt-action/releases)
 
 A GitHub Action that lets you Prompt AI directly in your workflows.
 
-- [Prompt :robot:](#prompt-robot)
+- [Prompt Action :robot:](#prompt-action-robot)
   - [Basic Usage 🚀](#basic-usage-)
     - [Provide prompt directly](#provide-prompt-directly)
     - [Load a prompt from a file](#load-a-prompt-from-a-file)
@@ -22,7 +22,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
 ### Provide prompt directly
 
 ```yaml
-- uses: FidelusAleksander/prompt@v1
+- uses: FidelusAleksander/prompt-action@v1
   with:
     prompt: "What is the meaning of life?"
 ```
@@ -30,7 +30,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
 ### Load a prompt from a file
 
 ```yaml
-- uses: FidelusAleksander/prompt@v1
+- uses: FidelusAleksander/prompt-action@v1
   with:
     prompt-file: .github/prompts/my-prompt.md
 ```
@@ -85,7 +85,7 @@ jobs:
     steps:
       - name: Prompt AI
         id: prompt
-        uses: FidelusAleksander/prompt@v1
+        uses: FidelusAleksander/prompt-action@v1
         with:
           model: gpt-4o
           prompt: |
@@ -138,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Prompt
-        uses: FidelusAleksander/prompt@v1
+        uses: FidelusAleksander/prompt-action@v1
         with:
           prompt: |
             Modify this PR title to match conventional commit styling:
