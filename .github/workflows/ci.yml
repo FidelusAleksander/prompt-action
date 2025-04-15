@@ -1,0 +1,28 @@
+name: Check Transpiled JavaScript
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  check-dist-call:
+    uses: actions/reusable-workflows/.github/workflows/check-dist.yml@5e63e7aef083769958fc026fe8eea0241c0eb444
+  test-typescript:
+    name: TypeScript Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm test
+
