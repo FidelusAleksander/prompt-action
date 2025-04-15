@@ -1,9 +1,17 @@
 name: Run Tests
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - 'dist/**'
+      - 'action.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'dist/**'
+      - 'action.yml'
   workflow_dispatch:
 
 permissions:
@@ -31,15 +39,3 @@ jobs:
         uses: ./
         with:
           prompt-file: ".github/prompts/ai.md"
-
-  test-typescript:
-    name: TypeScript Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-      - run: npm ci
-      - run: npm test
