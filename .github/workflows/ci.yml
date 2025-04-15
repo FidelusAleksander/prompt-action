@@ -1,4 +1,4 @@
-name: Check Transpiled JavaScript
+name: CI
 
 on:
   pull_request:
@@ -13,7 +13,9 @@ permissions:
 
 jobs:
   check-dist-call:
+    name: Check dist
     uses: actions/reusable-workflows/.github/workflows/check-dist.yml@5e63e7aef083769958fc026fe8eea0241c0eb444
+
   test-typescript:
     name: TypeScript Unit Tests
     runs-on: ubuntu-latest
