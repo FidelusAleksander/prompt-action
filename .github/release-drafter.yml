@@ -9,7 +9,6 @@ categories:
       - "bug"
   - title: "🧰 Maintenance"
     labels:
-      - "dependencies"
       - "maintenance"
   - title: "📚 Documentation"
     labels:
