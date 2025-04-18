@@ -1,6 +1,6 @@
 # Prompt Action :robot:
 
-[![Run Tests](https://github.com/FidelusAleksander/prompt-action/actions/workflows/test.yml/badge.svg)](https://github.com/FidelusAleksander/prompt-action/actions/workflows/test.yml)
+[![Run Tests](https://github.com/FidelusAleksander/prompt-action/actions/workflows/test-action.yml/badge.svg)](https://github.com/FidelusAleksander/prompt-action/actions/workflows/test-action.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/FidelusAleksander/prompt-action)](https://github.com/FidelusAleksander/prompt-action/releases)
 
