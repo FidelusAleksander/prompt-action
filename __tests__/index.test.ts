@@ -24,10 +24,18 @@ describe("GitHub Action", () => {
   const mockModel = "test-model";
   const mockPrompt = "test prompt";
   const mockResponse = "test response";
+  const mockAIResponse = {
+    text: mockResponse,
+    usage: {
+      prompt_tokens: 10,
+      completion_tokens: 20,
+      total_tokens: 30
+    }
+  };
 
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGenerateAIResponse.mockResolvedValue(mockResponse);
+    mockGenerateAIResponse.mockResolvedValue(mockAIResponse);
     mockCore.getInput.mockImplementation((name: string) => {
       switch (name) {
         case "token":
@@ -125,6 +133,38 @@ describe("GitHub Action", () => {
     expect(mockCore.setFailed).toHaveBeenCalledWith(
       "Either 'prompt' or 'prompt-file' input must be provided",
     );
+  });
+
+  it("should handle response without usage information", async () => {
+    const mockAIResponseWithoutUsage = {
+      text: mockResponse,
+      usage: undefined
+    };
+    mockGenerateAIResponse.mockResolvedValue(mockAIResponseWithoutUsage);
+    mockCore.getInput.mockImplementation((name: string) => {
+      switch (name) {
+        case "prompt":
+          return mockPrompt;
+        case "token":
+          return mockToken;
+        case "model":
+          return mockModel;
+        default:
+          return "";
+      }
+    });
+
+    await import("../src/index");
+
+    expect(mockGenerateAIResponse).toHaveBeenCalledWith(
+      mockPrompt,
+      mockModel,
+      mockToken,
+    );
+    expect(mockCore.setOutput).toHaveBeenCalledWith("text", mockResponse);
+    // Should not call startGroup for token usage when usage is undefined
+    expect(mockCore.startGroup).toHaveBeenCalledWith("AI Response");
+    expect(mockCore.startGroup).not.toHaveBeenCalledWith("Token Usage");
   });
 
   // Clear the module cache after each test
