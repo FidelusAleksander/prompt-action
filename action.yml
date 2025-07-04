@@ -21,6 +21,14 @@ inputs:
     description: >
       The AI model to use for generating the response
     default: "gpt-4o"
+  response-schema:
+    description: >
+      JSON schema to constrain the AI response format (inline)
+    required: false
+  response-schema-file:
+    description: >
+      Path to a file containing JSON schema to constrain the AI response format
+    required: false
 outputs:
   text:
     description: >

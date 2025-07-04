@@ -33,6 +33,8 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "openai": "^5.8.2"
   }
 }
