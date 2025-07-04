@@ -25,13 +25,22 @@ async function run() {
 
     // Generate AI response
     console.log(`Prompting ${model} AI model`);
-    const response = await generateAIResponse(prompt, model, token);
+    const aiResponse = await generateAIResponse(prompt, model, token);
 
     // Set output and log response
-    core.setOutput("text", response);
+    core.setOutput("text", aiResponse.text);
     core.startGroup("AI Response");
-    console.log(response);
+    console.log(aiResponse.text);
     core.endGroup();
+
+    // Log token usage information
+    if (aiResponse.usage) {
+      core.startGroup("Token Usage");
+      console.log(`Prompt tokens: ${aiResponse.usage.prompt_tokens}`);
+      console.log(`Completion tokens: ${aiResponse.usage.completion_tokens}`);
+      console.log(`Total tokens: ${aiResponse.usage.total_tokens}`);
+      core.endGroup();
+    }
   } catch (error) {
     core.setFailed(error instanceof Error ? error.message : String(error));
   }
