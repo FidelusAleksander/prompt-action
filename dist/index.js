@@ -9,8 +9,7 @@
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateAIResponse = generateAIResponse;
 const openai_1 = __nccwpck_require__(2583);
-const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers or solutions without additional commentary.";
-async function generateAIResponse(prompt, model, token) {
+async function generateAIResponse(prompt, systemPrompt, model, token) {
     const client = new openai_1.OpenAI({
         baseURL: "https://models.inference.ai.azure.com",
         apiKey: token,
@@ -19,7 +18,7 @@ async function generateAIResponse(prompt, model, token) {
         const completion = await client.chat.completions.create({
             model: model,
             messages: [
-                { role: "system", content: SYSTEM_PROMPT },
+                { role: "system", content: systemPrompt },
                 { role: "user", content: prompt }
             ],
         });
@@ -85,6 +84,8 @@ async function run() {
         const promptText = core.getInput("prompt");
         const token = core.getInput("token", { required: true });
         const model = core.getInput("model", { required: true });
+        const systemPromptFile = core.getInput("system-prompt-file");
+        const systemPromptText = core.getInput("system-prompt");
         let prompt;
         if (promptFile) {
             if (!fs.existsSync(promptFile)) {
@@ -98,9 +99,22 @@ async function run() {
         else {
             throw new Error("Either 'prompt' or 'prompt-file' input must be provided");
         }
+        let systemPrompt;
+        if (systemPromptFile) {
+            if (!fs.existsSync(systemPromptFile)) {
+                throw new Error(`System prompt file not found: ${systemPromptFile}`);
+            }
+            systemPrompt = fs.readFileSync(systemPromptFile, "utf8");
+        }
+        else if (systemPromptText) {
+            systemPrompt = systemPromptText;
+        }
+        else {
+            systemPrompt = "You are a helpful assistant.";
+        }
         // Generate AI response
         console.log(`Prompting ${model} AI model`);
-        const response = await (0, ai_1.generateAIResponse)(prompt, model, token);
+        const response = await (0, ai_1.generateAIResponse)(prompt, systemPrompt, model, token);
         // Set output and log response
         core.setOutput("text", response);
         core.startGroup("AI Response");

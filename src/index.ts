@@ -8,6 +8,8 @@ async function run() {
     const promptText = core.getInput("prompt");
     const token = core.getInput("token", { required: true });
     const model = core.getInput("model", { required: true });
+    const systemPromptFile = core.getInput("system-prompt-file");
+    const systemPromptText = core.getInput("system-prompt");
 
     let prompt: string;
     if (promptFile) {
@@ -23,9 +25,22 @@ async function run() {
       );
     }
 
+    let systemPrompt: string;
+    if (systemPromptFile) {
+      if (!fs.existsSync(systemPromptFile)) {
+        throw new Error(`System prompt file not found: ${systemPromptFile}`);
+      }
+      systemPrompt = fs.readFileSync(systemPromptFile, "utf8");
+    } else if (systemPromptText) {
+      systemPrompt = systemPromptText;
+    } else {
+      systemPrompt = "You are a helpful assistant.";
+    }
+
+
     // Generate AI response
     console.log(`Prompting ${model} AI model`);
-    const response = await generateAIResponse(prompt, model, token);
+    const response = await generateAIResponse(prompt, systemPrompt, model, token);
 
     // Set output and log response
     core.setOutput("text", response);

@@ -24,6 +24,7 @@ describe("GitHub Action", () => {
   const mockModel = "test-model";
   const mockPrompt = "test prompt";
   const mockResponse = "test response";
+  const mockSystemPrompt = "test system prompt";
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -45,6 +46,8 @@ describe("GitHub Action", () => {
       switch (name) {
         case "prompt":
           return mockPrompt;
+        case "system-prompt":
+          return mockSystemPrompt;
         case "token":
           return mockToken;
         case "model":
@@ -58,6 +61,7 @@ describe("GitHub Action", () => {
 
     expect(mockGenerateAIResponse).toHaveBeenCalledWith(
       mockPrompt,
+      mockSystemPrompt,
       mockModel,
       mockToken,
     );
@@ -74,6 +78,8 @@ describe("GitHub Action", () => {
       switch (name) {
         case "prompt-file":
           return promptFilePath;
+        case "system-prompt":
+          return mockSystemPrompt;
         case "token":
           return mockToken;
         case "model":
@@ -89,6 +95,7 @@ describe("GitHub Action", () => {
     expect(mockFs.readFileSync).toHaveBeenCalledWith(promptFilePath, "utf8");
     expect(mockGenerateAIResponse).toHaveBeenCalledWith(
       fileContent,
+      mockSystemPrompt,
       mockModel,
       mockToken,
     );
@@ -103,6 +110,8 @@ describe("GitHub Action", () => {
       switch (name) {
         case "prompt-file":
           return promptFilePath;
+        case "system-prompt":
+          return mockSystemPrompt;
         case "token":
           return mockToken;
         case "model":
