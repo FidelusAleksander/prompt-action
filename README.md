@@ -52,8 +52,11 @@ permissions:
 | `prompt-file` | Path to a file containing the prompt | No* | - |
 | `token` | Personal access token | No | `${{ github.token }}` |
 | `model` | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No | `gpt-4o` |
+| `response-schema` | JSON schema to constrain the AI response format (inline) | No | - |
+| `response-schema-file` | Path to a file containing JSON schema to constrain the AI response format | No | - |
 
-\* Either `prompt` or `prompt-file` must be provided
+\* Either `prompt` or `prompt-file` must be provided  
+\** When both `response-schema` and `response-schema-file` are provided, `response-schema-file` takes precedence
 
 ## Outputs 📤
 
@@ -146,3 +149,192 @@ jobs:
             ${{ github.event.pull_request.title }}
 
 ```
+
+### Structured Output with Response Schema
+
+Extract issue metadata with structured JSON response:
+
+```yaml
+- name: Extract issue metadata
+  id: extract
+  uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt: |
+      Analyze this GitHub issue and extract key information:
+      {{ issue_body }}
+    response-schema: |
+      {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["bug", "feature", "question", "documentation"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "estimated_effort": {
+            "type": "string",
+            "enum": ["small", "medium", "large"]
+          },
+          "labels": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": ["category", "priority", "summary"]
+      }
+    vars: |
+      issue_body: ${{ github.event.issue.body }}
+
+- name: Use structured output
+  run: |
+    echo "Category: ${{ fromJson(steps.extract.outputs.text).category }}"
+    echo "Priority: ${{ fromJson(steps.extract.outputs.text).priority }}"
+    echo "Summary: ${{ fromJson(steps.extract.outputs.text).summary }}"
+```
+
+### Code Analysis with Schema File
+
+Create a schema file `.github/schemas/code-analysis.json`:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "security_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+          "description": {"type": "string"},
+          "line_number": {"type": "number"},
+          "recommendation": {"type": "string"}
+        },
+        "required": ["severity", "description", "recommendation"]
+      }
+    },
+    "performance_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {"type": "string"},
+          "description": {"type": "string"},
+          "impact": {"type": "string", "enum": ["low", "medium", "high"]}
+        }
+      }
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "summary": {"type": "string"}
+  },
+  "required": ["security_issues", "overall_score", "summary"]
+}
+```
+
+Then use it in your workflow:
+
+```yaml
+- name: Analyze code security
+  id: analyze
+  uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt: |
+      Analyze the following code for security vulnerabilities and performance issues:
+      
+      ```{{ language }}
+      {{ code }}
+      ```
+    response-schema-file: .github/schemas/code-analysis.json
+    vars: |
+      language: javascript
+      code: ${{ steps.get-code.outputs.content }}
+
+- name: Process analysis results
+  run: |
+    ANALYSIS='${{ steps.analyze.outputs.text }}'
+    echo "Overall Score: $(echo $ANALYSIS | jq '.overall_score')"
+    echo "Security Issues: $(echo $ANALYSIS | jq '.security_issues | length')"
+    
+    # Create GitHub issue if critical security issues found
+    CRITICAL_COUNT=$(echo $ANALYSIS | jq '[.security_issues[] | select(.severity == "critical")] | length')
+    if [ "$CRITICAL_COUNT" -gt 0 ]; then
+      echo "::warning::Found $CRITICAL_COUNT critical security issues"
+    fi
+```
+
+### Contact Information Extraction
+
+Extract structured contact information from text:
+
+```yaml
+- name: Extract contact information
+  id: extract-contacts
+  uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt: |
+      Extract contact information from the following text:
+      {{ text_content }}
+    response-schema: |
+      {
+        "type": "object",
+        "properties": {
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {"type": "string"},
+                "email": {"type": "string", "format": "email"},
+                "phone": {"type": "string"},
+                "company": {"type": "string"},
+                "role": {"type": "string"}
+              },
+              "required": ["name"]
+            }
+          },
+          "confidence_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": ["contacts", "confidence_score"]
+      }
+    vars: |
+      text_content: ${{ steps.get-text.outputs.content }}
+
+- name: Process contacts
+  run: |
+    CONTACTS='${{ steps.extract-contacts.outputs.text }}'
+    echo "Found $(echo $CONTACTS | jq '.contacts | length') contacts"
+    echo "Confidence: $(echo $CONTACTS | jq '.confidence_score')"
+```
+
+## Schema Validation 🔍
+
+When using structured output:
+
+- The action validates your JSON schema before sending it to the AI
+- AI responses are validated against the schema (warnings are issued for non-compliant responses)
+- The action supports JSON Schema Draft 7+ including common formats (email, date, uri, etc.)
+- Schema files take precedence over inline schemas when both are provided
+- The original response is always returned, even if it doesn't match the schema
+
+## Benefits of Structured Output 🎯
+
+- **Reliable parsing**: Structured output can be reliably parsed with `fromJson()`
+- **Type safety**: Schema validation ensures expected data structure
+- **Automation-friendly**: Enables complex workflow automation based on AI analysis
+- **Consistent output**: Reduces variability in AI responses
+- **Error reduction**: Prevents downstream workflow failures due to unexpected formats
