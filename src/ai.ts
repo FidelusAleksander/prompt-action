@@ -1,9 +1,9 @@
 import { OpenAI } from "openai";
 
-const SYSTEM_PROMPT = "You are a helpful assistant. Always provide direct answers or solutions without additional commentary.";
 
 export async function generateAIResponse(
   prompt: string,
+  systemPrompt: string,
   model: string,
   token: string,
 ): Promise<string> {
@@ -16,7 +16,7 @@ export async function generateAIResponse(
     const completion = await client.chat.completions.create({
       model: model,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         { role: "user", content: prompt }
       ],
     });
