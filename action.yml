@@ -1,6 +1,6 @@
-name: "Prompt Action"
-description: "Prompt AI about... well, anything!"
-author: "FidelusAleksander"
+name: 'Prompt Action'
+description: 'Prompt AI about... well, anything!'
+author: 'FidelusAleksander'
 branding:
   icon: message-circle
   color: blue
@@ -20,11 +20,11 @@ inputs:
   model:
     description: >
       The AI model to use for generating the response
-    default: "gpt-4o"
+    default: 'gpt-4o'
 outputs:
   text:
     description: >
       The answer to your question
 runs:
-  using: "node20"
-  main: "dist/index.js"
+  using: 'node20'
+  main: 'dist/index.js'

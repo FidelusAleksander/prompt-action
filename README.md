@@ -24,7 +24,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
   with:
-    prompt: "What is the meaning of life?"
+    prompt: 'What is the meaning of life?'
 ```
 
 ### Load a prompt from a file
@@ -46,24 +46,25 @@ permissions:
 
 ## Inputs ⚙️
 
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `prompt` | The text prompt to send to the AI | No* | - |
-| `prompt-file` | Path to a file containing the prompt | No* | - |
-| `token` | Personal access token | No | `${{ github.token }}` |
-| `model` | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No | `gpt-4o` |
+| Input         | Description                                                                             | Required | Default               |
+| ------------- | --------------------------------------------------------------------------------------- | -------- | --------------------- |
+| `prompt`      | The text prompt to send to the AI                                                       | No\*     | -                     |
+| `prompt-file` | Path to a file containing the prompt                                                    | No\*     | -                     |
+| `token`       | Personal access token                                                                   | No       | `${{ github.token }}` |
+| `model`       | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No       | `gpt-4o`              |
 
 \* Either `prompt` or `prompt-file` must be provided
 
 ## Outputs 📤
 
-| Output | Description |
-|--------|-------------|
+| Output | Description                      |
+| ------ | -------------------------------- |
 | `text` | The AI's response to your prompt |
 
 ## Cool examples 🎮
 
-Have you come up with a clever use of this action? Open a PR to showcase it here for the world to see!
+Have you come up with a clever use of this action? Open a PR to showcase it here
+for the world to see!
 
 ### Respond to Issues
 
@@ -120,6 +121,7 @@ jobs:
 This action can help enforce conventional commit styling on PR titles.
 
 Ideas for follow up step:
+
 - comment on the PR with the suggested PR title
 - update the PR title
 
@@ -144,5 +146,4 @@ jobs:
             Modify this PR title to match conventional commit styling:
 
             ${{ github.event.pull_request.title }}
-
 ```

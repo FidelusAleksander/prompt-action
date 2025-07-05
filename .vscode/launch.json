@@ -2,14 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Action",
       "type": "node",
       "request": "launch",
-      "name": "Debug Action",
-      "runtimeArgs": ["-r", "ts-node/register", "-r", "dotenv/config"],
-      "program": "${workspaceFolder}/src/index.ts",
-      "envFile": "${workspaceFolder}/.env",
+      "runtimeExecutable": "npx",
+      "cwd": "${workspaceRoot}",
+      "args": ["@github/local-action", ".", "src/main.ts", ".env"],
       "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
     }
   ]
 }
