@@ -28,7 +28,7 @@ jobs:
         id: test
         uses: ./
         with:
-          prompt: "What is the meaning of life?"
+          prompt: 'What is the meaning of life?'
 
   test-action-prompt-file:
     name: Test Action with Prompt File
@@ -38,4 +38,4 @@ jobs:
       - name: Test action
         uses: ./
         with:
-          prompt-file: ".github/prompts/ai.md"
+          prompt-file: '.github/prompts/ai.md'
