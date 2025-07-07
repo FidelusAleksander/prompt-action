@@ -4,7 +4,8 @@ export async function generateAIResponse(
   prompt: string,
   systemPrompt: string,
   model: string,
-  token: string
+  token: string,
+  schema?: { [key: string]: unknown }
 ): Promise<string> {
   const client = new OpenAI({
     baseURL: 'https://models.inference.ai.azure.com',
@@ -12,13 +13,38 @@ export async function generateAIResponse(
   })
 
   try {
-    const completion = await client.chat.completions.create({
+    const completionOptions: {
+      model: string
+      messages: Array<{ role: 'system' | 'user'; content: string }>
+      response_format?: {
+        type: 'json_schema'
+        json_schema: {
+          name: string
+          schema: { [key: string]: unknown }
+          strict: boolean
+        }
+      }
+    } = {
       model: model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ]
-    })
+    }
+
+    // Add structured output format if schema is provided
+    if (schema) {
+      completionOptions.response_format = {
+        type: 'json_schema',
+        json_schema: {
+          name: 'structured_response',
+          schema: schema,
+          strict: true
+        }
+      }
+    }
+
+    const completion = await client.chat.completions.create(completionOptions)
 
     const response = completion.choices[0]?.message?.content
     if (!response) {

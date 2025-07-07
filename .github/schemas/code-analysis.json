@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of the analysis"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "line": {
+            "type": "number"
+          }
+        },
+        "required": ["severity", "description"],
+        "additionalProperties": false
+      }
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    }
+  },
+  "required": ["summary", "issues", "score"],
+  "additionalProperties": false
+}
