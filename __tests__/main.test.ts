@@ -8,12 +8,12 @@
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
 import * as fs from '../__fixtures__/fs.js'
-import * as ai from '../__fixtures__/ai.js'
+import * as openai from '../__fixtures__/openai.js'
 
 // Mocks should be declared before the module being tested is imported.
 jest.unstable_mockModule('@actions/core', () => core)
 jest.unstable_mockModule('fs', () => fs)
-jest.unstable_mockModule('../src/ai.js', () => ai)
+jest.unstable_mockModule('openai', () => openai)
 
 // The module being tested should be imported dynamically. This ensures that the
 // mocks are used in place of any actual dependencies.
@@ -28,7 +28,21 @@ describe('GitHub Action', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    ai.generateAIResponse.mockResolvedValue(mockResponse)
+    // Set up the OpenAI mock to return our test response
+    openai.mockCreate.mockResolvedValue({
+      model: mockModel,
+      choices: [
+        {
+          message: {
+            content: mockResponse,
+            refusal: null,
+            role: 'assistant'
+          },
+          finish_reason: 'stop',
+          index: 0
+        }
+      ]
+    })
   })
 
   afterEach(() => {
@@ -54,12 +68,13 @@ describe('GitHub Action', () => {
     // Call the run function with our mocks
     await run()
 
-    expect(ai.generateAIResponse).toHaveBeenCalledWith(
-      mockPrompt,
-      mockSystemPrompt,
-      mockModel,
-      mockToken
-    )
+    expect(openai.mockCreate).toHaveBeenCalledWith({
+      model: mockModel,
+      messages: [
+        { role: 'system', content: mockSystemPrompt },
+        { role: 'user', content: mockPrompt }
+      ]
+    })
     expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
   })
 
@@ -89,12 +104,13 @@ describe('GitHub Action', () => {
 
     expect(fs.existsSync).toHaveBeenCalledWith(promptFilePath)
     expect(fs.readFileSync).toHaveBeenCalledWith(promptFilePath, 'utf8')
-    expect(ai.generateAIResponse).toHaveBeenCalledWith(
-      fileContent,
-      mockSystemPrompt,
-      mockModel,
-      mockToken
-    )
+    expect(openai.mockCreate).toHaveBeenCalledWith({
+      model: mockModel,
+      messages: [
+        { role: 'system', content: mockSystemPrompt },
+        { role: 'user', content: fileContent }
+      ]
+    })
     expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
   })
 
