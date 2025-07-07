@@ -39,3 +39,24 @@ jobs:
         uses: ./
         with:
           prompt-file: '.github/prompts/ai.md'
+
+  test-action-response-schema:
+    name: Test Action with Response Schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test action with structured output
+        id: test-schema
+        uses: ./
+        with:
+          prompt: 'What is the meaning of life? Please answer with confidence level and categorize your response.'
+          response-schema-file: '__tests__/test-schema.json'
+      - name: Validate structured output
+        run: |
+          echo "Response: ${{ steps.test-schema.outputs.text }}"
+          # Validate that the response is valid JSON
+          echo '${{ steps.test-schema.outputs.text }}' | jq .
+          # Validate that required fields exist
+          echo '${{ steps.test-schema.outputs.text }}' | jq -e '.answer'
+          echo '${{ steps.test-schema.outputs.text }}' | jq -e '.confidence'
+          echo '${{ steps.test-schema.outputs.text }}' | jq -e '.category'

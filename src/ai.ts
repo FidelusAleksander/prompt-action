@@ -1,10 +1,12 @@
 import { OpenAI } from 'openai'
+import type { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/chat/completions'
 
 export async function generateAIResponse(
   prompt: string,
   systemPrompt: string,
   model: string,
-  token: string
+  token: string,
+  responseSchema?: Record<string, unknown>
 ): Promise<string> {
   const client = new OpenAI({
     baseURL: 'https://models.inference.ai.azure.com',
@@ -12,13 +14,27 @@ export async function generateAIResponse(
   })
 
   try {
-    const completion = await client.chat.completions.create({
+    const completionParams: ChatCompletionCreateParamsNonStreaming = {
       model: model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ]
-    })
+    }
+
+    // Add response_format for structured outputs if schema is provided
+    if (responseSchema) {
+      completionParams.response_format = {
+        type: 'json_schema',
+        json_schema: {
+          name: 'response_schema',
+          schema: responseSchema,
+          strict: true
+        }
+      }
+    }
+
+    const completion = await client.chat.completions.create(completionParams)
 
     const response = completion.choices[0]?.message?.content
     if (!response) {

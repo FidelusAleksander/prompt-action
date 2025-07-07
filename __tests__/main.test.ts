@@ -60,7 +60,8 @@ describe('GitHub Action', () => {
         mockPrompt,
         mockSystemPrompt,
         mockModel,
-        mockToken
+        mockToken,
+        undefined
       )
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
@@ -95,7 +96,8 @@ describe('GitHub Action', () => {
         fileContent,
         mockSystemPrompt,
         mockModel,
-        mockToken
+        mockToken,
+        undefined
       )
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
@@ -171,7 +173,8 @@ describe('GitHub Action', () => {
         mockPrompt,
         mockSystemPrompt,
         mockModel,
-        mockToken
+        mockToken,
+        undefined
       )
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
@@ -206,7 +209,8 @@ describe('GitHub Action', () => {
         mockPrompt,
         systemPromptContent,
         mockModel,
-        mockToken
+        mockToken,
+        undefined
       )
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
@@ -249,7 +253,8 @@ describe('GitHub Action', () => {
         promptContent,
         systemPromptContent,
         mockModel,
-        mockToken
+        mockToken,
+        undefined
       )
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
@@ -276,7 +281,8 @@ describe('GitHub Action', () => {
         mockPrompt,
         defaultSystemPrompt,
         mockModel,
-        mockToken
+        mockToken,
+        undefined
       )
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
@@ -331,6 +337,159 @@ describe('GitHub Action', () => {
       await run()
 
       expect(core.setFailed).toHaveBeenCalledWith(errorMessage)
+    })
+
+    it('should handle AI response generation errors', async () => {
+      const errorMessage = 'AI error'
+      ai.generateAIResponse.mockRejectedValue(new Error(errorMessage))
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(errorMessage)
+    })
+  })
+
+  describe('Response Schema', () => {
+    const schemaFilePath = '__tests__/test-schema.json'
+    const mockSchema = {
+      type: 'object',
+      properties: {
+        answer: { type: 'string' }
+      },
+      required: ['answer']
+    }
+
+    it('should work with response schema file', async () => {
+      fs.existsSync.mockReturnValue(true)
+      fs.readFileSync.mockReturnValue(JSON.stringify(mockSchema))
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'response-schema-file':
+            return schemaFilePath
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(fs.existsSync).toHaveBeenCalledWith(schemaFilePath)
+      expect(fs.readFileSync).toHaveBeenCalledWith(schemaFilePath, 'utf8')
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken,
+        mockSchema
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should work without response schema file', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should handle missing schema file', async () => {
+      fs.existsSync.mockReturnValue(false)
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'response-schema-file':
+            return schemaFilePath
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        `Response schema file not found: ${schemaFilePath}`
+      )
+    })
+
+    it('should handle invalid JSON in schema file', async () => {
+      fs.existsSync.mockReturnValue(true)
+      fs.readFileSync.mockReturnValue('invalid json')
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'response-schema-file':
+            return schemaFilePath
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to parse response schema file:')
+      )
     })
   })
 })
