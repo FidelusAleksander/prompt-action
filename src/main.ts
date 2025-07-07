@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
-import { generateAIResponse } from './ai'
+import { generateAIResponse } from './ai.js'
 
 export async function run() {
   try {
