@@ -8,12 +8,12 @@
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
 import * as fs from '../__fixtures__/fs.js'
-import * as openai from '../__fixtures__/openai.js'
+import * as ai from '../__fixtures__/ai.js'
 
 // Mocks should be declared before the module being tested is imported.
 jest.unstable_mockModule('@actions/core', () => core)
 jest.unstable_mockModule('fs', () => fs)
-jest.unstable_mockModule('openai', () => openai)
+jest.unstable_mockModule('../src/ai.js', () => ai)
 
 // The module being tested should be imported dynamically. This ensures that the
 // mocks are used in place of any actual dependencies.
@@ -28,136 +28,309 @@ describe('GitHub Action', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    // Set up the OpenAI mock to return our test response
-    openai.mockCreate.mockResolvedValue({
-      model: mockModel,
-      choices: [
-        {
-          message: {
-            content: mockResponse,
-            refusal: null,
-            role: 'assistant'
-          },
-          finish_reason: 'stop',
-          index: 0
-        }
-      ]
-    })
+    // Set up the AI mock to return our test response
+    ai.generateAIResponse.mockResolvedValue(mockResponse)
   })
 
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it('should work with prompt input', async () => {
-    core.getInput.mockImplementation((name: string) => {
-      switch (name) {
-        case 'prompt':
-          return mockPrompt
-        case 'system-prompt':
-          return mockSystemPrompt
-        case 'token':
-          return mockToken
-        case 'model':
-          return mockModel
-        default:
-          return ''
-      }
+  describe('Prompt Input', () => {
+    it('should work with prompt text input', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      // Call the run function with our mocks
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
 
-    // Call the run function with our mocks
-    await run()
+    it('should work with prompt file input', async () => {
+      const promptFilePath = 'test-prompt.txt'
+      const fileContent = 'prompt from file'
 
-    expect(openai.mockCreate).toHaveBeenCalledWith({
-      model: mockModel,
-      messages: [
-        { role: 'system', content: mockSystemPrompt },
-        { role: 'user', content: mockPrompt }
-      ]
+      fs.existsSync.mockReturnValue(true)
+      fs.readFileSync.mockReturnValue(fileContent)
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt-file':
+            return promptFilePath
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      // Call the run function with our mocks
+      await run()
+
+      expect(fs.existsSync).toHaveBeenCalledWith(promptFilePath)
+      expect(fs.readFileSync).toHaveBeenCalledWith(promptFilePath, 'utf8')
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        fileContent,
+        mockSystemPrompt,
+        mockModel,
+        mockToken
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
-    expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+
+    it('should throw error when prompt file does not exist', async () => {
+      const promptFilePath = 'non-existent.txt'
+
+      fs.existsSync.mockReturnValue(false)
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt-file':
+            return promptFilePath
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      // Call the run function with our mocks
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        `Prompt file not found: ${promptFilePath}`
+      )
+    })
+
+    it('should throw error when neither prompt nor prompt file is provided', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      // Call the run function with our mocks
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        "Either 'prompt' or 'prompt-file' input must be provided"
+      )
+    })
   })
 
-  it('should work with prompt-file input', async () => {
-    const promptFilePath = 'test-prompt.txt'
-    const fileContent = 'prompt from file'
+  describe('System Prompt Input', () => {
+    it('should work with system prompt text input', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
 
-    fs.existsSync.mockReturnValue(true)
-    fs.readFileSync.mockReturnValue(fileContent)
-    core.getInput.mockImplementation((name: string) => {
-      switch (name) {
-        case 'prompt-file':
-          return promptFilePath
-        case 'system-prompt':
-          return mockSystemPrompt
-        case 'token':
-          return mockToken
-        case 'model':
-          return mockModel
-        default:
-          return ''
-      }
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
 
-    // Call the run function with our mocks
-    await run()
+    it('should work with system prompt file input', async () => {
+      const systemPromptFilePath = 'system-prompt.txt'
+      const systemPromptContent = 'You are a specialized assistant'
 
-    expect(fs.existsSync).toHaveBeenCalledWith(promptFilePath)
-    expect(fs.readFileSync).toHaveBeenCalledWith(promptFilePath, 'utf8')
-    expect(openai.mockCreate).toHaveBeenCalledWith({
-      model: mockModel,
-      messages: [
-        { role: 'system', content: mockSystemPrompt },
-        { role: 'user', content: fileContent }
-      ]
+      fs.existsSync.mockReturnValue(true)
+      fs.readFileSync.mockReturnValue(systemPromptContent)
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt-file':
+            return systemPromptFilePath
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(fs.existsSync).toHaveBeenCalledWith(systemPromptFilePath)
+      expect(fs.readFileSync).toHaveBeenCalledWith(systemPromptFilePath, 'utf8')
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        systemPromptContent,
+        mockModel,
+        mockToken
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
-    expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+
+    it('should work with both prompt file and system prompt file', async () => {
+      const promptFilePath = 'test-prompt.txt'
+      const systemPromptFilePath = 'system-prompt.txt'
+      const promptContent = 'prompt from file'
+      const systemPromptContent = 'You are a specialized assistant'
+
+      // Mock file system calls - return true for both files exist
+      fs.existsSync.mockReturnValue(true)
+      // Mock file reading - we'll set up separate test calls
+      fs.readFileSync
+        .mockReturnValueOnce(promptContent)
+        .mockReturnValueOnce(systemPromptContent)
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt-file':
+            return promptFilePath
+          case 'system-prompt-file':
+            return systemPromptFilePath
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(fs.existsSync).toHaveBeenCalledWith(promptFilePath)
+      expect(fs.existsSync).toHaveBeenCalledWith(systemPromptFilePath)
+      expect(fs.readFileSync).toHaveBeenCalledWith(promptFilePath, 'utf8')
+      expect(fs.readFileSync).toHaveBeenCalledWith(systemPromptFilePath, 'utf8')
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        promptContent,
+        systemPromptContent,
+        mockModel,
+        mockToken
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should use default system prompt when none provided', async () => {
+      const defaultSystemPrompt = 'You are a helpful assistant.'
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        defaultSystemPrompt,
+        mockModel,
+        mockToken
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should throw error when system prompt file does not exist', async () => {
+      const systemPromptFilePath = 'non-existent-system.txt'
+
+      fs.existsSync.mockReturnValue(false)
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt-file':
+            return systemPromptFilePath
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        `System prompt file not found: ${systemPromptFilePath}`
+      )
+    })
   })
 
-  it("should throw error when prompt file doesn't exist", async () => {
-    const promptFilePath = 'non-existent.txt'
+  describe('Error Handling', () => {
+    it('should handle AI generation errors', async () => {
+      const errorMessage = 'API Error'
+      ai.generateAIResponse.mockRejectedValue(new Error(errorMessage))
 
-    fs.existsSync.mockReturnValue(false)
-    core.getInput.mockImplementation((name: string) => {
-      switch (name) {
-        case 'prompt-file':
-          return promptFilePath
-        case 'system-prompt':
-          return mockSystemPrompt
-        case 'token':
-          return mockToken
-        case 'model':
-          return mockModel
-        default:
-          return ''
-      }
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(errorMessage)
     })
-
-    // Call the run function with our mocks
-    await run()
-
-    expect(core.setFailed).toHaveBeenCalledWith(
-      `Prompt file not found: ${promptFilePath}`
-    )
-  })
-
-  it('should throw error when neither prompt nor prompt-file is provided', async () => {
-    core.getInput.mockImplementation((name: string) => {
-      switch (name) {
-        case 'token':
-          return mockToken
-        case 'model':
-          return mockModel
-        default:
-          return ''
-      }
-    })
-
-    // Call the run function with our mocks
-    await run()
-
-    expect(core.setFailed).toHaveBeenCalledWith(
-      "Either 'prompt' or 'prompt-file' input must be provided"
-    )
   })
 })
