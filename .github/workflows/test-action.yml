@@ -56,21 +56,20 @@ jobs:
       - name: Test all required fields are present
         run: |
 
-          echo "${{ fromJSON(steps.structured-test.outputs.text) }}"
-          # Check response field (required)
+          # Check response field
           if [ -z "${{ fromJSON(steps.structured-test.outputs.text).response }}" ]; then
             echo "❌ Test failed: response field is empty"
             exit 1
           fi
 
-          # Check confidence field (required)
+          # Check confidence field
           if [ -z "${{ fromJSON(steps.structured-test.outputs.text).confidence }}" ]; then
             echo "❌ Test failed: confidence field is missing"
             exit 1
           fi
 
           # Check tags list field
-          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).tags }}" ]; then
+          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).tags[0] }}" ]; then
             echo "❌ Test failed: tags field is missing"
             exit 1
           fi
