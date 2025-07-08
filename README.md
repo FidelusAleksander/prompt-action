@@ -46,10 +46,10 @@ consistent, typed responses from AI models.
   uses: FidelusAleksander/prompt-action@v1
   with:
     prompt: 'Analyze this code and provide feedback'
-    response-schema-file: '.github/schemas/code-analysis.json'
+    response-schema-file: '__tests__/code-analysis.json'
 ```
 
-Example schema file (`.github/schemas/code-analysis.json`):
+Example schema file (`__tests__/code-analysis.json`):
 
 ```json
 {
@@ -151,7 +151,7 @@ Combine system prompts with structured outputs for specialized AI behavior:
     system-prompt: |
       You are a senior software engineer performing code reviews.
       Focus on security, performance, and maintainability.
-    response-schema-file: '.github/schemas/code-review.json'
+    response-schema-file: '__tests__/code-review.json'
 ```
 
 ### Reading prompts and schemas from files
@@ -164,7 +164,7 @@ Keep your workspace organized by using files:
   with:
     prompt-file: '.github/prompts/analysis-prompt.md'
     system-prompt-file: '.github/prompts/expert-system.md'
-    response-schema-file: '.github/schemas/analysis-response.json'
+    response-schema-file: '__tests__/analysis-response.json'
     model: 'gpt-4o'
 ```
 
