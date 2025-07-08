@@ -51,3 +51,13 @@ jobs:
         with:
           prompt: 'Provide a simple test response'
           response-schema-file: '__tests__/test-schema.json'
+          
+      - name: Test message field is not empty
+        run: |
+          MESSAGE="${{ fromJSON(steps.structured-test.outputs.text).message }}"
+          if [ -z "$MESSAGE" ]; then
+            echo "❌ Test failed: message field is empty"
+            exit 1
+          else
+            echo "✅ Test passed: message field is not empty (length: ${#MESSAGE})"
+          fi

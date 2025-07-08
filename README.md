@@ -10,9 +10,12 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
   - [Basic Usage 🚀](#basic-usage-)
     - [Provide prompt directly](#provide-prompt-directly)
     - [Load a prompt from a file](#load-a-prompt-from-a-file)
+    - [Get structured outputs (JSON)](#get-structured-outputs-json)
   - [Permissions 🔒](#permissions-)
   - [Inputs ⚙️](#inputs-️)
   - [Outputs 📤](#outputs-)
+  - [Advanced Usage 🔧](#advanced-usage-)
+    - [Using system prompts with structured outputs](#using-system-prompts-with-structured-outputs)
   - [Cool examples 🎮](#cool-examples-)
     - [Respond to Issues](#respond-to-issues)
     - [Automatically format PR titles to conventional commits](#automatically-format-pr-titles-to-conventional-commits)
@@ -49,83 +52,31 @@ consistent, typed responses from AI models.
     response-schema-file: '__tests__/code-analysis.json'
 ```
 
-Example schema file (`__tests__/code-analysis.json`):
+Learn more about JSON Schema syntax at
+[json-schema.org](https://json-schema.org/).
 
-```json
-{
-  "type": "object",
-  "properties": {
-    "summary": {
-      "type": "string",
-      "description": "Brief summary of the analysis"
-    },
-    "issues": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "severity": {
-            "type": "string",
-            "enum": ["low", "medium", "high", "critical"]
-          },
-          "description": {
-            "type": "string"
-          },
-          "line": {
-            "type": "number"
-          }
-        },
-        "required": ["severity", "description"],
-        "additionalProperties": false
-      }
-    },
-    "score": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 100
-    }
-  },
-  "required": ["summary", "issues", "score"],
-  "additionalProperties": false
-}
-```
-
-The AI will respond with structured JSON matching your schema:
-
-```json
-{
-  "summary": "Code looks good overall with minor improvements needed",
-  "issues": [
-    {
-      "severity": "medium",
-      "description": "Consider adding error handling",
-      "line": 42
-    }
-  ],
-  "score": 85
-}
-```
+The AI will respond with structured JSON matching your schema.
 
 ## Permissions 🔒
 
 This actions requires at minimum the following permissions set.
 
-```
+```yaml
 permissions:
   models: read
 ```
 
 ## Inputs ⚙️
 
-| Input                  | Description                                                                             | Required | Default               |
-| ---------------------- | --------------------------------------------------------------------------------------- | -------- | --------------------- |
-| `prompt`               | The text prompt to send to the AI                                                       | No\*     | -                     |
-| `prompt-file`          | Path to a file containing the prompt                                                    | No\*     | -                     |
-| `token`                | Personal access token                                                                   | No       | `${{ github.token }}` |
-| `model`                | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No       | `gpt-4o`              |
-| `system-prompt`        | System prompt to provide context for the AI                                             | No       | -                     |
-| `system-prompt-file`   | Path to a file containing the system prompt                                             | No       | -                     |
-| `response-schema-file` | Path to a JSON file containing the response schema for structured outputs               | No       | -                     |
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `prompt` | Text that will be used as user prompt | No* | - |
+| `prompt-file` | Path to a file containing the user prompt | No* | - |
+| `token` | Personal access token | No | `${{ github.token }}` |
+| `model` | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No | `gpt-4o` |
+| `system-prompt` | Text that will be used as system prompt | No | "You are a helpful assistant." |
+| `system-prompt-file` | Path to a file containing the system prompt | No | - |
+| `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No | - |
 
 \* Either `prompt` or `prompt-file` must be provided
 
@@ -152,20 +103,6 @@ Combine system prompts with structured outputs for specialized AI behavior:
       You are a senior software engineer performing code reviews.
       Focus on security, performance, and maintainability.
     response-schema-file: '__tests__/code-review.json'
-```
-
-### Reading prompts and schemas from files
-
-Keep your workspace organized by using files:
-
-```yaml
-- name: Organized AI workflow
-  uses: FidelusAleksander/prompt-action@v1
-  with:
-    prompt-file: '.github/prompts/analysis-prompt.md'
-    system-prompt-file: '.github/prompts/expert-system.md'
-    response-schema-file: '__tests__/analysis-response.json'
-    model: 'gpt-4o'
 ```
 
 ## Cool examples 🎮
