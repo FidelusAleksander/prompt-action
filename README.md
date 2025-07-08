@@ -7,20 +7,19 @@
 A GitHub Action that lets you Prompt AI directly in your workflows.
 
 - [Prompt Action :robot:](#prompt-action-robot)
-  - [Basic Usage 🚀](#basic-usage-)
+  - [Usage 🚀](#usage-)
     - [Provide prompt directly](#provide-prompt-directly)
     - [Load a prompt from a file](#load-a-prompt-from-a-file)
-    - [Get structured outputs (JSON)](#get-structured-outputs-json)
+    - [Add a system prompt](#add-a-system-prompt)
+    - [Structured Outputs](#structured-outputs)
   - [Permissions 🔒](#permissions-)
   - [Inputs ⚙️](#inputs-️)
   - [Outputs 📤](#outputs-)
-  - [Advanced Usage 🔧](#advanced-usage-)
-    - [Using system prompts with structured outputs](#using-system-prompts-with-structured-outputs)
   - [Cool examples 🎮](#cool-examples-)
     - [Respond to Issues](#respond-to-issues)
     - [Automatically format PR titles to conventional commits](#automatically-format-pr-titles-to-conventional-commits)
 
-## Basic Usage 🚀
+## Usage 🚀
 
 ### Provide prompt directly
 
@@ -38,24 +37,71 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
     prompt-file: .github/prompts/my-prompt.md
 ```
 
-### Get structured outputs (JSON)
-
-Enable structured outputs by providing a JSON Schema file. This ensures
-consistent, typed responses from AI models.
+### Add a system prompt
 
 ```yaml
-- name: Get structured response
-  id: ai-response
-  uses: FidelusAleksander/prompt-action@v1
+- uses: FidelusAleksander/prompt-action@v1
   with:
-    prompt: 'Analyze this code and provide feedback'
-    response-schema-file: '__tests__/code-analysis.json'
+    system-prompt: 'Youa are Gilfoyle from Silicon Valley.'
+    prompt: 'Tell me about your latest project.'
 ```
 
-Learn more about JSON Schema syntax at
-[json-schema.org](https://json-schema.org/).
+### Structured Outputs
 
-The AI will respond with structured JSON matching your schema.
+You can ensure the model returns data in a specific format by providing a
+[JSON Schema](https://json-schema.org/implementers/interfaces).
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt: |
+      Analyze this code change and provide a review summary.
+
+      diff:
+        - def process_data(data):
+        -     return data
+        + def process_data(data: dict) -> dict:
+        +     if not isinstance(data, dict):
+        +         raise TypeError("Input must be a dictionary")
+        +     return {k: v.strip() for k, v in data.items()}
+    response-schema-file: '.github/schemas/code-review.json'
+```
+
+> **Note**: This action uses strict mode for structured outputs, which
+> guarantees that the AI response will exactly match your schema. Your schema
+> must include `"additionalProperties": false` for all object types to work
+> correctly.
+
+<details><summary>Example schema in <code>.github/schemas/code-review.json</code></summary>
+
+```json
+{
+  "type": "object",
+  "required": ["rating", "summary", "suggestions"],
+  "additionalProperties": false,
+  "properties": {
+    "rating": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Code quality rating from 1-5"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief review summary"
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of improvement suggestions"
+    }
+  }
+}
+```
+
+</details>
 
 ## Permissions 🔒
 
@@ -68,15 +114,15 @@ permissions:
 
 ## Inputs ⚙️
 
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `prompt` | Text that will be used as user prompt | No* | - |
-| `prompt-file` | Path to a file containing the user prompt | No* | - |
-| `token` | Personal access token | No | `${{ github.token }}` |
-| `model` | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No | `gpt-4o` |
-| `system-prompt` | Text that will be used as system prompt | No | "You are a helpful assistant." |
-| `system-prompt-file` | Path to a file containing the system prompt | No | - |
-| `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No | - |
+| Input                  | Description                                                                                                                  | Required | Default                        |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------ |
+| `prompt`               | Text that will be used as user prompt                                                                                        | No\*     | -                              |
+| `prompt-file`          | Path to a file containing the user prompt                                                                                    | No\*     | -                              |
+| `token`                | Personal access token                                                                                                        | No       | `${{ github.token }}`          |
+| `model`                | The AI model to use. See [available models](https://github.com/marketplace?type=models)                                      | No       | `gpt-4o`                       |
+| `system-prompt`        | Text that will be used as system prompt                                                                                      | No       | "You are a helpful assistant." |
+| `system-prompt-file`   | Path to a file containing the system prompt                                                                                  | No       | -                              |
+| `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No       | -                              |
 
 \* Either `prompt` or `prompt-file` must be provided
 
@@ -85,25 +131,6 @@ permissions:
 | Output | Description                      |
 | ------ | -------------------------------- |
 | `text` | The AI's response to your prompt |
-
-## Advanced Usage 🔧
-
-### Using system prompts with structured outputs
-
-Combine system prompts with structured outputs for specialized AI behavior:
-
-```yaml
-- name: Code review with structured output
-  uses: FidelusAleksander/prompt-action@v1
-  with:
-    prompt: |
-      Review this pull request:
-      ${{ github.event.pull_request.body }}
-    system-prompt: |
-      You are a senior software engineer performing code reviews.
-      Focus on security, performance, and maintainability.
-    response-schema-file: '__tests__/code-review.json'
-```
 
 ## Cool examples 🎮
 
