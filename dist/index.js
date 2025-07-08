@@ -33951,7 +33951,7 @@ async function generateAIResponse(prompt, systemPrompt, model, token, schema) {
                 json_schema: {
                     name: 'structured_response',
                     schema: schema,
-                    strict: true
+                    strict: false
                 }
             };
         }

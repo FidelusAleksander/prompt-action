@@ -182,7 +182,7 @@ describe('generateAIResponse', () => {
         json_schema: {
           name: 'structured_response',
           schema: schema,
-          strict: true
+          strict: false
         }
       }
     })

@@ -73,4 +73,3 @@ jobs:
             echo "❌ Test failed: tags field is missing"
             exit 1
           fi
-
