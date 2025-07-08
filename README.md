@@ -7,9 +7,11 @@
 A GitHub Action that lets you Prompt AI directly in your workflows.
 
 - [Prompt Action :robot:](#prompt-action-robot)
-  - [Basic Usage 🚀](#basic-usage-)
+  - [Usage 🚀](#usage-)
     - [Provide prompt directly](#provide-prompt-directly)
     - [Load a prompt from a file](#load-a-prompt-from-a-file)
+    - [Add a system prompt](#add-a-system-prompt)
+    - [Structured Outputs](#structured-outputs)
   - [Permissions 🔒](#permissions-)
   - [Inputs ⚙️](#inputs-️)
   - [Outputs 📤](#outputs-)
@@ -17,7 +19,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
     - [Respond to Issues](#respond-to-issues)
     - [Automatically format PR titles to conventional commits](#automatically-format-pr-titles-to-conventional-commits)
 
-## Basic Usage 🚀
+## Usage 🚀
 
 ### Provide prompt directly
 
@@ -35,23 +37,85 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
     prompt-file: .github/prompts/my-prompt.md
 ```
 
+### Add a system prompt
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  with:
+    system-prompt: 'Youa are Gilfoyle from Silicon Valley.'
+    prompt: 'Tell me about your latest project.'
+```
+
+### Structured Outputs
+
+You can ensure the model returns data in a specific format by providing a
+[JSON Schema](https://json-schema.org/implementers/interfaces).
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  id: prompt
+  with:
+    prompt: |
+      Will humanity reach Mars by 2035?
+    response-schema-file: .github/schemas/simple-response.json
+- name: Use the output
+  run: |
+    echo "Response: ${{ fromJSON(steps.prompt.outputs.text).response }}"
+    echo "Confidence: ${{ fromJSON(steps.prompt.outputs.text).confidence }}"
+    echo "Tags: ${{ fromJSON(steps.prompt.outputs.text).tags }}"
+```
+
+<details><summary>Example schema</code></summary>
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "string",
+      "description": "The main response text"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence level from 0 to 1"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Relevant tags or categories"
+    }
+  },
+  "required": ["response", "confidence", "tags"],
+  "additionalProperties": false
+}
+```
+
+</details>
+
 ## Permissions 🔒
 
 This actions requires at minimum the following permissions set.
 
-```
+```yaml
 permissions:
   models: read
 ```
 
 ## Inputs ⚙️
 
-| Input         | Description                                                                             | Required | Default               |
-| ------------- | --------------------------------------------------------------------------------------- | -------- | --------------------- |
-| `prompt`      | The text prompt to send to the AI                                                       | No\*     | -                     |
-| `prompt-file` | Path to a file containing the prompt                                                    | No\*     | -                     |
-| `token`       | Personal access token                                                                   | No       | `${{ github.token }}` |
-| `model`       | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No       | `gpt-4o`              |
+| Input                  | Description                                                                                                                  | Required | Default                        |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------ |
+| `prompt`               | Text that will be used as user prompt                                                                                        | No\*     | -                              |
+| `prompt-file`          | Path to a file containing the user prompt                                                                                    | No\*     | -                              |
+| `token`                | Personal access token                                                                                                        | No       | `${{ github.token }}`          |
+| `model`                | The AI model to use. See [available models](https://github.com/marketplace?type=models)                                      | No       | `gpt-4o`                       |
+| `system-prompt`        | Text that will be used as system prompt                                                                                      | No       | "You are a helpful assistant." |
+| `system-prompt-file`   | Path to a file containing the system prompt                                                                                  | No       | -                              |
+| `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No       | -                              |
 
 \* Either `prompt` or `prompt-file` must be provided
 

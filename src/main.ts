@@ -10,6 +10,7 @@ export async function run() {
     const model = core.getInput('model', { required: true })
     const systemPromptFile = core.getInput('system-prompt-file')
     const systemPromptText = core.getInput('system-prompt')
+    const responseSchemaFile = core.getInput('response-schema-file')
 
     let prompt: string
     if (promptFile) {
@@ -35,13 +36,31 @@ export async function run() {
       systemPrompt = 'You are a helpful assistant.'
     }
 
+    // Read and parse response schema if provided
+    let responseSchema: { [key: string]: unknown } | undefined
+    if (responseSchemaFile) {
+      if (!fs.existsSync(responseSchemaFile)) {
+        throw new Error(`Response schema file not found: ${responseSchemaFile}`)
+      }
+
+      try {
+        const schemaContent = fs.readFileSync(responseSchemaFile, 'utf8')
+        responseSchema = JSON.parse(schemaContent)
+      } catch (parseError) {
+        throw new Error(
+          `Invalid JSON in response schema file: ${responseSchemaFile}. ${parseError instanceof Error ? parseError.message : String(parseError)}`
+        )
+      }
+    }
+
     // Generate AI response
     console.log(`Prompting ${model} AI model`)
     const response = await generateAIResponse(
       prompt,
       systemPrompt,
       model,
-      token
+      token,
+      responseSchema
     )
 
     // Set output and log response
