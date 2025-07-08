@@ -527,4 +527,245 @@ describe('GitHub Action', () => {
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
   })
+
+  describe('Template Processing', () => {
+    it('should process prompt template with vars', async () => {
+      const templatePrompt = 'Hello {{ name }}, you are {{ age }} years old'
+      const vars = `
+        name: Alice
+        age: 30
+      `
+      const expectedPrompt = 'Hello Alice, you are 30 years old'
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return templatePrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return vars
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        expectedPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should process system prompt template with vars', async () => {
+      const templateSystemPrompt = 'You are a {{ role }} expert'
+      const vars = 'role: TypeScript'
+      const expectedSystemPrompt = 'You are a TypeScript expert'
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return templateSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return vars
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        expectedSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should process templates in both prompt and system prompt', async () => {
+      const templatePrompt = 'Translate {{ text }} to {{ language }}'
+      const templateSystemPrompt = 'You are a {{ language }} expert'
+      const vars = `
+        text: "Hello world"
+        language: Spanish
+      `
+      const expectedPrompt = 'Translate Hello world to Spanish'
+      const expectedSystemPrompt = 'You are a Spanish expert'
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return templatePrompt
+          case 'system-prompt':
+            return templateSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return vars
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        expectedPrompt,
+        expectedSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should process template with prompt file', async () => {
+      const promptFilePath = 'test-prompt.txt'
+      const templateContent = 'Review {{ language }} code for {{ focus }}'
+      const vars = `
+        language: TypeScript
+        focus: security
+      `
+      const expectedPrompt = 'Review TypeScript code for security'
+
+      fs.existsSync.mockReturnValue(true)
+      fs.readFileSync.mockReturnValue(templateContent)
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt-file':
+            return promptFilePath
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return vars
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(fs.readFileSync).toHaveBeenCalledWith(promptFilePath, 'utf8')
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        expectedPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should work without vars (backward compatibility)', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return '' // No vars provided
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        mockPrompt,
+        mockSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+    })
+
+    it('should handle template processing errors', async () => {
+      const templatePrompt = 'Hello {{ undefinedVar }}'
+      const vars = 'name: world'
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return templatePrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return vars
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining('Template rendering error')
+      )
+    })
+
+    it('should handle invalid YAML in vars', async () => {
+      const invalidYaml = `
+        name: "unclosed string
+        age: 30
+      `
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          case 'vars':
+            return invalidYaml
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid YAML in vars parameter')
+      )
+    })
+  })
 })

@@ -33,6 +33,10 @@ inputs:
     description: >
       Path to a JSON file containing the response schema for structured outputs
     required: false
+  vars:
+    description: >
+      YAML-formatted variables for template substitution in prompts
+    required: false
 outputs:
   text:
     description: >
