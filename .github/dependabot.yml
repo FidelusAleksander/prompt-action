@@ -8,6 +8,10 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - 'maintenance'
+    groups:
+      npm-dependencies:
+        patterns:
+          - '*'
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: 'github-actions'
@@ -17,3 +21,7 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - 'maintenance'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
