@@ -49,15 +49,29 @@ jobs:
         id: structured-test
         uses: ./
         with:
-          prompt: 'Provide a simple test response'
-          response-schema-file: '__tests__/test-schema.json'
-          
-      - name: Test message field is not empty
+          prompt: |
+            Will humanity reach Mars by 2035?
+          response-schema-file: __tests__/simple-response.json
+
+      - name: Test all required fields are present
         run: |
-          MESSAGE="${{ fromJSON(steps.structured-test.outputs.text).message }}"
-          if [ -z "$MESSAGE" ]; then
-            echo "❌ Test failed: message field is empty"
+
+          echo "${{ fromJSON(steps.structured-test.outputs.text) }}"
+          # Check response field (required)
+          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).response }}" ]; then
+            echo "❌ Test failed: response field is empty"
             exit 1
-          else
-            echo "✅ Test passed: message field is not empty (length: ${#MESSAGE})"
           fi
+
+          # Check confidence field (required)
+          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).confidence }}" ]; then
+            echo "❌ Test failed: confidence field is missing"
+            exit 1
+          fi
+
+          # Check tags list field
+          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).tags }}" ]; then
+            echo "❌ Test failed: tags field is missing"
+            exit 1
+          fi
+

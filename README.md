@@ -48,8 +48,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
 
 ### Structured Outputs
 
-You can ensure the model returns data in a specific format by providing a
-[JSON Schema](https://json-schema.org/implementers/interfaces).
+You can ensure the model returns data in a specific format by providing a [JSON Schema](https://json-schema.org/implementers/interfaces).
 
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
@@ -67,39 +66,34 @@ You can ensure the model returns data in a specific format by providing a
     response-schema-file: '.github/schemas/code-review.json'
 ```
 
-> **Note**: This action uses strict mode for structured outputs, which
-> guarantees that the AI response will exactly match your schema. Your schema
-> must include `"additionalProperties": false` for all object types to work
-> correctly.
-
 <details><summary>Example schema in <code>.github/schemas/code-review.json</code></summary>
 
-```json
-{
-  "type": "object",
-  "required": ["rating", "summary", "suggestions"],
-  "additionalProperties": false,
-  "properties": {
-    "rating": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 5,
-      "description": "Code quality rating from 1-5"
-    },
-    "summary": {
-      "type": "string",
-      "description": "Brief review summary"
-    },
-    "suggestions": {
-      "type": "array",
-      "items": {
-        "type": "string"
+  ```json
+  {
+    "type": "object",
+    "required": ["rating", "summary", "suggestions"],
+    "additionalProperties": false,
+    "properties": {
+      "rating": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5,
+        "description": "Code quality rating from 1-5"
       },
-      "description": "List of improvement suggestions"
+      "summary": {
+        "type": "string",
+        "description": "Brief review summary"
+      },
+      "suggestions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "List of improvement suggestions"
+      }
     }
   }
-}
-```
+  ```
 
 </details>
 
@@ -114,15 +108,15 @@ permissions:
 
 ## Inputs ⚙️
 
-| Input                  | Description                                                                                                                  | Required | Default                        |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------ |
-| `prompt`               | Text that will be used as user prompt                                                                                        | No\*     | -                              |
-| `prompt-file`          | Path to a file containing the user prompt                                                                                    | No\*     | -                              |
-| `token`                | Personal access token                                                                                                        | No       | `${{ github.token }}`          |
-| `model`                | The AI model to use. See [available models](https://github.com/marketplace?type=models)                                      | No       | `gpt-4o`                       |
-| `system-prompt`        | Text that will be used as system prompt                                                                                      | No       | "You are a helpful assistant." |
-| `system-prompt-file`   | Path to a file containing the system prompt                                                                                  | No       | -                              |
-| `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No       | -                              |
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `prompt` | Text that will be used as user prompt | No* | - |
+| `prompt-file` | Path to a file containing the user prompt | No* | - |
+| `token` | Personal access token | No | `${{ github.token }}` |
+| `model` | The AI model to use. See [available models](https://github.com/marketplace?type=models) | No | `gpt-4o` |
+| `system-prompt` | Text that will be used as system prompt | No | "You are a helpful assistant." |
+| `system-prompt-file` | Path to a file containing the system prompt | No | - |
+| `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No | - |
 
 \* Either `prompt` or `prompt-file` must be provided
 

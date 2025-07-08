@@ -19,6 +19,6 @@
       "description": "Relevant tags or categories"
     }
   },
-  "required": ["response"],
+  "required": ["response", "confidence", "tags"],
   "additionalProperties": false
 }
