@@ -99,14 +99,17 @@ You can ensure the model returns data in a specific format by providing a
 
 ### Templating with Variables 🔧
 
-You can create dynamic prompts using Nunjucks templating and YAML variables. This makes your prompts more flexible and reusable across different contexts.
+You can create dynamic prompts using Nunjucks templating and YAML variables.
+This makes your prompts more flexible and reusable across different contexts.
 
 #### Basic Variable Substitution
 
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
   with:
-    prompt: "You are a {{ language }} expert translator. Translate the following text to {{ target_language }}: {{ text }}"
+    prompt:
+      'You are a {{ language }} expert translator. Translate the following text
+      to {{ target_language }}: {{ text }}'
     vars: |
       language: Spanish
       target_language: English
@@ -119,14 +122,13 @@ Create a template file:
 
 ```markdown
 <!-- .github/prompts/code-review.md -->
-You are a {{ language }} code expert specializing in {{ framework }}.
-Please review the following {{ file_type }} code for:
-{% for focus in review_focus %}
-- {{ focus }}
-{% endfor %}
 
-Code to review:
-{{ code }}
+You are a {{ language }} code expert specializing in {{ framework }}. Please
+review the following {{ file_type }} code for: {% for focus in review_focus %}
+
+- {{ focus }} {% endfor %}
+
+Code to review: {{ code }}
 ```
 
 Use it in your workflow:
@@ -153,11 +155,11 @@ Use it in your workflow:
   with:
     prompt: |
       Generate a PR description for {{ repo_name }}.
-      
+
       Branch: {{ branch }}
       Author: {{ author }}
       Files changed: {{ files_count }}
-      
+
       Changes summary:
       {{ changes }}
     vars: |
@@ -175,16 +177,16 @@ Use it in your workflow:
   with:
     prompt: |
       Generate documentation for {{ project_type }}:
-      
+
       {% if has_tests %}
       Include testing information and examples.
       {% endif %}
-      
+
       Dependencies:
       {% for dep in dependencies %}
       - {{ dep.name }}: {{ dep.version }}
       {% endfor %}
-      
+
       Environment: {{ environment }}
     vars: |
       project_type: Node.js
@@ -205,7 +207,9 @@ Use it in your workflow:
 - **Filters**: `{{ text | upper }}`, `{{ items | join(', ') }}`
 - **Nested objects**: `{{ user.name }}`, `{{ config.database.host }}`
 
-**Note**: Templates are processed for both `prompt`/`prompt-file` and `system-prompt`/`system-prompt-file` inputs. The `vars` parameter is optional - existing workflows continue to work without modification.
+**Note**: Templates are processed for both `prompt`/`prompt-file` and
+`system-prompt`/`system-prompt-file` inputs. The `vars` parameter is optional -
+existing workflows continue to work without modification.
 
 ## Permissions 🔒
 
@@ -227,7 +231,7 @@ permissions:
 | `system-prompt`        | Text that will be used as system prompt                                                                                      | No       | "You are a helpful assistant." |
 | `system-prompt-file`   | Path to a file containing the system prompt                                                                                  | No       | -                              |
 | `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No       | -                              |
-| `vars`                 | YAML-formatted variables for template substitution in prompts                                                               | No       | -                              |
+| `vars`                 | YAML-formatted variables for template substitution in prompts                                                                | No       | -                              |
 
 \* Either `prompt` or `prompt-file` must be provided
 
