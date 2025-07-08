@@ -53,46 +53,44 @@ You can ensure the model returns data in a specific format by providing a
 
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
+  id: prompt
   with:
     prompt: |
-      Analyze this code change and provide a review summary.
-
-      diff:
-        - def process_data(data):
-        -     return data
-        + def process_data(data: dict) -> dict:
-        +     if not isinstance(data, dict):
-        +         raise TypeError("Input must be a dictionary")
-        +     return {k: v.strip() for k, v in data.items()}
-    response-schema-file: '.github/schemas/code-review.json'
+      Will humanity reach Mars by 2035?
+    response-schema-file: .github/schemas/simple-response.json
+- name: Use the output
+  run: |
+    echo "Response: ${{ fromJSON(steps.prompt.outputs.text).response }}"
+    echo "Confidence: ${{ fromJSON(steps.prompt.outputs.text).confidence }}"
+    echo "Tags: ${{ fromJSON(steps.prompt.outputs.text).tags }}"
 ```
 
-<details><summary>Example schema in <code>.github/schemas/code-review.json</code></summary>
+<details><summary>Example schema</code></summary>
 
 ```json
 {
   "type": "object",
-  "required": ["rating", "summary", "suggestions"],
-  "additionalProperties": false,
   "properties": {
-    "rating": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 5,
-      "description": "Code quality rating from 1-5"
-    },
-    "summary": {
+    "response": {
       "type": "string",
-      "description": "Brief review summary"
+      "description": "The main response text"
     },
-    "suggestions": {
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence level from 0 to 1"
+    },
+    "tags": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "description": "List of improvement suggestions"
+      "description": "Relevant tags or categories"
     }
-  }
+  },
+  "required": ["response", "confidence", "tags"],
+  "additionalProperties": false
 }
 ```
 
