@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Country Capital Response",
+  "type": "object",
+  "properties": {
+    "country": {
+      "type": "string",
+      "description": "The country that was asked about."
+    },
+    "capital": {
+      "type": "string",
+      "description": "The capital city of the country."
+    }
+  },
+  "required": ["country", "capital"]
+}
