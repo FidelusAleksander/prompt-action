@@ -39,7 +39,7 @@ jobs:
         id: country-test
         uses: ./
         with:
-          system-prompt-file: '.github/prompts/system-prompt.md'
+          system-prompt-file: '__tests__/prompts/provide-direct-answers.md'
           prompt-file: '__tests__/prompts/country-capital-prompt.md'
           vars: |
             country: Great Britain
