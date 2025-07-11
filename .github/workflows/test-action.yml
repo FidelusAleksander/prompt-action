@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   test-action-prompt:
-    name: Test Action with Prompt
+    name: Simple Test with Prompt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,46 +30,27 @@ jobs:
         with:
           prompt: 'What is the meaning of life?'
 
-  test-action-prompt-file:
-    name: Test Action with Prompt File
+  test-action-full-features:
+    name: Test Action full feature set
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Test action
+      - name: Test action with Vars and Response Schema
+        id: country-test
         uses: ./
         with:
-          prompt-file: '.github/prompts/ai.md'
+          system-prompt-file: '__tests__/prompts/provide-direct-answers.md'
+          prompt-file: '__tests__/prompts/country-capital-prompt.md'
+          vars: |
+            country: Great Britain
+          response-schema-file: __tests__/country-capital-response.json
 
-  test-action-structured-output:
-    name: Test Action with Structured Output
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test action with schema
-        id: structured-test
-        uses: ./
+      - name: Check answer contains "London"
+        id: keyphrase-check
+        uses: skills/action-keyphrase-checker@v1
         with:
-          prompt: |
-            Will humanity reach Mars by 2035?
-          response-schema-file: __tests__/simple-response.json
-
-      - name: Test all required fields are present
-        run: |
-
-          # Check response field
-          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).response }}" ]; then
-            echo "❌ Test failed: response field is empty"
-            exit 1
-          fi
-
-          # Check confidence field
-          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).confidence }}" ]; then
-            echo "❌ Test failed: confidence field is missing"
-            exit 1
-          fi
-
-          # Check tags list field
-          if [ -z "${{ fromJSON(steps.structured-test.outputs.text).tags[0] }}" ]; then
-            echo "❌ Test failed: tags field is missing"
-            exit 1
-          fi
+          text: ${{ fromJSON(steps.country-test.outputs.text).capital }}
+          keyphrase: 'London'
+          case-sensitive: false
+          minimum-occurrences: 1
+          maximum-occurrences: 1

@@ -12,6 +12,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
     - [Load a prompt from a file](#load-a-prompt-from-a-file)
     - [Add a system prompt](#add-a-system-prompt)
     - [Structured Outputs](#structured-outputs)
+    - [Templating with Variables 🔧](#templating-with-variables-)
   - [Permissions 🔒](#permissions-)
   - [Inputs ⚙️](#inputs-️)
   - [Outputs 📤](#outputs-)
@@ -96,6 +97,120 @@ You can ensure the model returns data in a specific format by providing a
 
 </details>
 
+### Templating with Variables 🔧
+
+You can create dynamic prompts using Nunjucks templating and YAML variables.
+This makes your prompts more flexible and reusable across different contexts.
+
+#### Basic Variable Substitution
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt:
+      'You are a {{ language }} expert translator. Translate the following text
+      to {{ target_language }}: {{ text }}'
+    vars: |
+      language: Spanish
+      target_language: English
+      text: "Hola mundo"
+```
+
+#### Using with Prompt Files
+
+Create a template file:
+
+```markdown
+<!-- .github/prompts/code-review.md -->
+
+You are a {{ language }} code expert specializing in {{ framework }}. Please
+review the following {{ file_type }} code for: {% for focus in review_focus %}
+
+- {{ focus }} {% endfor %}
+
+Code to review: {{ code }}
+```
+
+Use it in your workflow:
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt-file: .github/prompts/code-review.md
+    vars: |
+      language: TypeScript
+      framework: React
+      file_type: component
+      review_focus:
+        - performance
+        - security
+        - best practices
+      code: ${{ steps.get-code.outputs.content }}
+```
+
+#### Dynamic Values from Workflow Context
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt: |
+      Generate a PR description for {{ repo_name }}.
+
+      Branch: {{ branch }}
+      Author: {{ author }}
+      Files changed: {{ files_count }}
+
+      Changes summary:
+      {{ changes }}
+    vars: |
+      repo_name: ${{ github.repository }}
+      branch: ${{ github.head_ref }}
+      author: ${{ github.actor }}
+      files_count: ${{ steps.count-files.outputs.count }}
+      changes: ${{ steps.get-changes.outputs.summary }}
+```
+
+#### Conditional Logic and Loops
+
+```yaml
+- uses: FidelusAleksander/prompt-action@v1
+  with:
+    prompt: |
+      Generate documentation for {{ project_type }}:
+
+      {% if has_tests %}
+      Include testing information and examples.
+      {% endif %}
+
+      Dependencies:
+      {% for dep in dependencies %}
+      - {{ dep.name }}: {{ dep.version }}
+      {% endfor %}
+
+      Environment: {{ environment }}
+    vars: |
+      project_type: Node.js
+      has_tests: true
+      environment: development
+      dependencies:
+        - name: express
+          version: "4.18.0"
+        - name: typescript
+          version: "5.0.0"
+```
+
+#### Template Features
+
+- **Variable substitution**: `{{ variable }}`
+- **Conditionals**: `{% if condition %}...{% endif %}`
+- **Loops**: `{% for item in items %}...{% endfor %}`
+- **Filters**: `{{ text | upper }}`, `{{ items | join(', ') }}`
+- **Nested objects**: `{{ user.name }}`, `{{ config.database.host }}`
+
+**Note**: Templates are processed for both `prompt`/`prompt-file` and
+`system-prompt`/`system-prompt-file` inputs. The `vars` parameter is optional -
+existing workflows continue to work without modification.
+
 ## Permissions 🔒
 
 This actions requires at minimum the following permissions set.
@@ -116,6 +231,7 @@ permissions:
 | `system-prompt`        | Text that will be used as system prompt                                                                                      | No       | "You are a helpful assistant." |
 | `system-prompt-file`   | Path to a file containing the system prompt                                                                                  | No       | -                              |
 | `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No       | -                              |
+| `vars`                 | YAML-formatted variables for template substitution in prompts                                                                | No       | -                              |
 
 \* Either `prompt` or `prompt-file` must be provided
 

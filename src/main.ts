@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
 import { generateAIResponse } from './ai.js'
+import { processTemplate } from './template.js'
 
 export async function run() {
   try {
@@ -11,6 +12,7 @@ export async function run() {
     const systemPromptFile = core.getInput('system-prompt-file')
     const systemPromptText = core.getInput('system-prompt')
     const responseSchemaFile = core.getInput('response-schema-file')
+    const vars = core.getInput('vars')
 
     let prompt: string
     if (promptFile) {
@@ -24,6 +26,9 @@ export async function run() {
       throw new Error("Either 'prompt' or 'prompt-file' input must be provided")
     }
 
+    // Process prompt template with variables
+    prompt = processTemplate(prompt, vars)
+
     let systemPrompt: string
     if (systemPromptFile) {
       if (!fs.existsSync(systemPromptFile)) {
@@ -35,6 +40,9 @@ export async function run() {
     } else {
       systemPrompt = 'You are a helpful assistant.'
     }
+
+    // Process system prompt template with variables
+    systemPrompt = processTemplate(systemPrompt, vars)
 
     // Read and parse response schema if provided
     let responseSchema: { [key: string]: unknown } | undefined
