@@ -342,7 +342,7 @@ describe('GitHub Action', () => {
 
   describe('Response Schema', () => {
     it('should work with response schema file', async () => {
-      const schemaFilePath = 'test-schema.json'
+      const schemaFilePath = '__tests__/schemas/test-schema.json'
       const schema = {
         type: 'object',
         properties: {
@@ -472,7 +472,7 @@ describe('GitHub Action', () => {
     })
 
     it('should work with real schema file from disk', async () => {
-      const schemaFilePath = '__tests__/test-schema.json'
+      const schemaFilePath = '__tests__/schemas/test-schema.json'
       const realSchemaContent = JSON.stringify({
         type: 'object',
         properties: {

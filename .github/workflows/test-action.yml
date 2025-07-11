@@ -43,7 +43,7 @@ jobs:
           prompt-file: '__tests__/prompts/country-capital-prompt.md'
           vars: |
             country: Great Britain
-          response-schema-file: __tests__/country-capital-response.json
+          response-schema-file: __tests__/schemas/country-capital-response.json
 
       - name: Check answer contains "London"
         id: keyphrase-check
