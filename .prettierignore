@@ -3,3 +3,6 @@
 dist/
 node_modules/
 coverage/
+
+# Test files with intentionally invalid content
+__tests__/schemas/invalid-schema.json
