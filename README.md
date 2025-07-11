@@ -131,7 +131,7 @@ permissions:
 | `system-prompt`        | Text that will be used as system prompt                                                                                      | No       | "You are a helpful assistant." |
 | `system-prompt-file`   | Path to a file containing the system prompt                                                                                  | No       | -                              |
 | `response-schema-file` | Path to a file containing the response [JSON Schema](https://json-schema.org/implementers/interfaces) for structured outputs | No       | -                              |
-| `vars`                 | YAML-formatted variables for [NunJucks](https://mozilla.github.io/nunjucks/) variable substitution in prompts                | No       | -                              |
+| `vars`                 | YAML-formatted variables for [Nunjucks](https://mozilla.github.io/nunjucks/) variable substitution in prompts                | No       | -                              |
 
 \* Either `prompt` or `prompt-file` must be provided
 
