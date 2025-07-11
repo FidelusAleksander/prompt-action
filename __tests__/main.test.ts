@@ -137,7 +137,9 @@ describe('GitHub Action', () => {
       // Verify that the content includes the multiline structure
       expect(realContent).toContain('This is a test multiline')
       expect(realContent).toContain('Prompt from a file')
-      expect(realContent).toMatch(/This is a test multiline\s+Prompt from a file/)
+      expect(realContent).toMatch(
+        /This is a test multiline\s+Prompt from a file/
+      )
     })
 
     it('should throw error when prompt file does not exist', async () => {
