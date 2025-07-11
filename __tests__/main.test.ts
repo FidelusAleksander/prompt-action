@@ -67,10 +67,7 @@ describe('GitHub Action', () => {
 
     it('should work with prompt file input', async () => {
       // Use a real file for this test
-      const promptFilePath = '__tests__/prompts/test-prompt.txt'
-
-      // We don't mock fs.existsSync and fs.readFileSync for this test
-      // The file system operations will use the real implementation
+      const promptFilePath = '__tests__/prompts/provide-direct-answers.md'
 
       core.getInput.mockImplementation((name: string) => {
         switch (name) {
@@ -93,7 +90,6 @@ describe('GitHub Action', () => {
       // Read the real file content to verify
       const realContent = fs.readFileSync(promptFilePath, 'utf8')
 
-      // Skip checking fs calls since we're using real filesystem
       expect(ai.generateAIResponse).toHaveBeenCalledWith(
         realContent,
         mockSystemPrompt,
@@ -104,9 +100,48 @@ describe('GitHub Action', () => {
       expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
     })
 
+    it('should work with multiline prompt file input', async () => {
+      // Use the multiline prompt file for this test
+      const promptFilePath = '__tests__/prompts/multiline-prompt.md'
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt-file':
+            return promptFilePath
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      // Call the run function with our mocks
+      await run()
+
+      // Read the real multiline file content to verify
+      const realContent = fs.readFileSync(promptFilePath, 'utf8')
+
+      expect(ai.generateAIResponse).toHaveBeenCalledWith(
+        realContent,
+        mockSystemPrompt,
+        mockModel,
+        mockToken,
+        undefined
+      )
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+
+      // Verify that the content includes the multiline structure
+      expect(realContent).toContain('This is a test multiline')
+      expect(realContent).toContain('Prompt from a file')
+      expect(realContent).toMatch(/This is a test multiline\s+Prompt from a file/)
+    })
+
     it('should throw error when prompt file does not exist', async () => {
-      const promptFilePath =
-        '/tmp/non-existent-file-for-test-' + Date.now() + '.txt'
+      const promptFilePath = '/tmp/non-existent-file-for-test.txt'
 
       core.getInput.mockImplementation((name: string) => {
         switch (name) {
@@ -183,7 +218,7 @@ describe('GitHub Action', () => {
 
     it('should work with system prompt file input', async () => {
       // Use existing system prompt file
-      const systemPromptFilePath = '__tests__/prompts/test-system-prompt.txt'
+      const systemPromptFilePath = '__tests__/prompts/provide-direct-answers.md'
 
       core.getInput.mockImplementation((name: string) => {
         switch (name) {
@@ -203,7 +238,10 @@ describe('GitHub Action', () => {
       await run()
 
       // Read the actual file content to verify
-      const expectedSystemPromptContent = fs.readFileSync(systemPromptFilePath, 'utf8')
+      const expectedSystemPromptContent = fs.readFileSync(
+        systemPromptFilePath,
+        'utf8'
+      )
 
       expect(ai.generateAIResponse).toHaveBeenCalledWith(
         mockPrompt,
@@ -217,8 +255,8 @@ describe('GitHub Action', () => {
 
     it('should work with both prompt file and system prompt file', async () => {
       // Use existing files for testing
-      const promptFilePath = '__tests__/prompts/test-prompt.txt'
-      const systemPromptFilePath = '__tests__/prompts/test-system-prompt.txt'
+      const promptFilePath = '__tests__/prompts/country-capital-prompt.md'
+      const systemPromptFilePath = '__tests__/prompts/provide-direct-answers.md'
 
       core.getInput.mockImplementation((name: string) => {
         switch (name) {
@@ -239,7 +277,10 @@ describe('GitHub Action', () => {
 
       // Read the actual file contents to verify
       const expectedPromptContent = fs.readFileSync(promptFilePath, 'utf8')
-      const expectedSystemPromptContent = fs.readFileSync(systemPromptFilePath, 'utf8')
+      const expectedSystemPromptContent = fs.readFileSync(
+        systemPromptFilePath,
+        'utf8'
+      )
 
       expect(ai.generateAIResponse).toHaveBeenCalledWith(
         expectedPromptContent,
@@ -280,8 +321,7 @@ describe('GitHub Action', () => {
     })
 
     it('should throw error when system prompt file does not exist', async () => {
-      const systemPromptFilePath =
-        '/tmp/non-existent-system-prompt-' + Date.now() + '.txt'
+      const systemPromptFilePath = '/tmp/non-existent-system-prompt.md'
 
       core.getInput.mockImplementation((name: string) => {
         switch (name) {
@@ -606,13 +646,12 @@ describe('GitHub Action', () => {
     })
 
     it('should process template with prompt file', async () => {
-      const promptFilePath = '__tests__/prompts/template-prompt.txt'
+      const promptFilePath = '__tests__/prompts/country-capital-prompt.md'
       const vars = `
-        language: TypeScript
-        focus: security
+        country: Portugal
       `
       // The expected result after template processing (will include newline from file)
-      const expectedPrompt = 'Review TypeScript code for security\n'
+      const expectedPrompt = 'What is the capital of Portugal?\n'
 
       core.getInput.mockImplementation((name: string) => {
         switch (name) {

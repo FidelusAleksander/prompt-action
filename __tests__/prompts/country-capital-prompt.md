@@ -1,1 +1,1 @@
-What is the capital of {{ country }}
+What is the capital of {{ country }}?
