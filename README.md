@@ -10,7 +10,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
   - [Usage examples 🚀](#usage-examples-)
     - [Simple prompting](#simple-prompting)
     - [Structured Outputs](#structured-outputs)
-    - [Use variables in Prompts 🔧](#use-variables-in-prompts-)
+    - [Templating with Variables](#templating-with-variables)
   - [Permissions 🔒](#permissions-)
   - [Inputs ⚙️](#inputs-️)
   - [Outputs 📤](#outputs-)
@@ -28,7 +28,7 @@ A GitHub Action that lets you Prompt AI directly in your workflows.
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
   with:
-    system-prompt: 'Youa are Gilfoyle from Silicon Valley.'
+    system-prompt: 'You are Gilfoyle from Silicon Valley.'
     prompt: 'Tell me about your latest project.'
 ```
 
@@ -82,9 +82,11 @@ You can ensure the model returns data in a specific format by providing a
 
 </details>
 
-### Use variables in Prompts 🔧
+### Templating with Variables
 
-You can create dynamic prompts using [Nunjucks](https://mozilla.github.io/nunjucks/) templating and YAML variables with the usage of the `vars` parameter.
+You can create dynamic prompts using
+[Nunjucks](https://mozilla.github.io/nunjucks/) templating and YAML variables
+with the usage of the `vars` parameter.
 
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
@@ -106,7 +108,7 @@ You can create dynamic prompts using [Nunjucks](https://mozilla.github.io/nunjuc
 ```
 
 > **Note**: Variables can be used for both `prompt`/`prompt-file` and
-`system-prompt`/`system-prompt-file` inputs.
+> `system-prompt`/`system-prompt-file` inputs.
 
 ## Permissions 🔒
 
