@@ -84,30 +84,23 @@ You can ensure the model returns data in a specific format by providing a
 
 ### Templating with Variables
 
-You can create dynamic prompts using
-[Nunjucks](https://mozilla.github.io/nunjucks/) templating and YAML variables
-with the usage of the `vars` parameter.
+You can create dynamic prompts using `{{ variable }}` syntax with the usage of the `vars` parameter. 
 
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
   with:
     system-prompt: |
       You are a {{ language }} expert translator. 
+
       You will be provided with text to translate to {{ language }}.
       Respond with nothing but the translated text.
-
-      Don't translate the following
-      {% for item in neverTranslate %}
-      - {{ item }}
-      {% endfor %}`
 
     prompt-file: README.md
     vars: |
       language: Spanish
-      neverTranslate:
-        - code blocks
-        - image alt text
 ```
+
+> For more advanced templating features like loops, conditionals, and filters, see the [Nunjucks templating documentation](https://mozilla.github.io/nunjucks/templating.html).
 
 > [!TIP]
 > Variable templating makes most
