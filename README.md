@@ -96,19 +96,23 @@ with the usage of the `vars` parameter.
       You will be provided with text to translate to {{ language }}.
       Respond with nothing but the translated text.
 
-      Don't translate the following: {{ never-translate | join(', ') }}
+      Don't translate the following
+      {% for item in neverTranslate %}
+      - {{ item }}
+      {% endfor %}`
 
     prompt-file: README.md
     vars: |
       language: Spanish
-      never-translate:
+      neverTranslate:
         - code blocks
-        - markdown headers
         - image alt text
 ```
 
-> **Note**: Variables can be used for both `prompt`/`prompt-file` and
-> `system-prompt`/`system-prompt-file` inputs.
+> [!TIP]
+> Variable templating makes most
+> sense when using `prompt-file` or `system-prompt-file` inputs, as it allows
+> you to maintain reusable prompt templates with dynamic content.
 
 ## Permissions 🔒
 
