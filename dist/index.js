@@ -2,7 +2,7 @@ import require$$0 from 'os';
 import require$$0$1 from 'crypto';
 import * as fs from 'fs';
 import fs__default from 'fs';
-import require$$1$4 from 'path';
+import require$$1$3 from 'path';
 import require$$2 from 'http';
 import require$$3 from 'https';
 import require$$0$4 from 'net';
@@ -14,21 +14,19 @@ import require$$0$5 from 'stream';
 import require$$7 from 'buffer';
 import require$$8 from 'querystring';
 import require$$14 from 'stream/web';
-import require$$0$7 from 'node:stream';
-import require$$1$1 from 'node:util';
-import require$$0$6 from 'node:events';
-import require$$0$8 from 'worker_threads';
+import { createRequire } from 'node:module';
+import require$$0$6 from 'worker_threads';
 import require$$2$1 from 'perf_hooks';
 import require$$5 from 'util/types';
 import require$$4$1 from 'async_hooks';
-import require$$1$2 from 'console';
-import require$$1$3 from 'url';
+import require$$1$1 from 'console';
+import require$$1$2 from 'url';
 import require$$3$1 from 'zlib';
 import require$$6 from 'string_decoder';
-import require$$0$9 from 'diagnostics_channel';
+import require$$0$7 from 'diagnostics_channel';
 import require$$2$2 from 'child_process';
 import require$$6$1 from 'timers';
-import require$$0$a from 'domain';
+import require$$0$8 from 'domain';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1722,6 +1720,15 @@ function requireTimers () {
 
 var main = {exports: {}};
 
+const require$3 = createRequire(import.meta.url);
+function __require$2() { return require$3("node:stream"); }
+
+const require$2 = createRequire(import.meta.url);
+function __require$1() { return require$2("node:util"); }
+
+const require$1 = createRequire(import.meta.url);
+function __require() { return require$1("node:events"); }
+
 var sbmh;
 var hasRequiredSbmh;
 
@@ -1755,8 +1762,8 @@ function requireSbmh () {
 	 * Based heavily on the Streaming Boyer-Moore-Horspool C++ implementation
 	 * by Hongli Lai at: https://github.com/FooBarWidget/boyer-moore-horspool
 	 */
-	const EventEmitter = require$$0$6.EventEmitter;
-	const inherits = require$$1$1.inherits;
+	const EventEmitter = __require().EventEmitter;
+	const inherits = __require$1().inherits;
 
 	function SBMH (needle) {
 	  if (typeof needle === 'string') {
@@ -1965,8 +1972,8 @@ function requirePartStream () {
 	if (hasRequiredPartStream) return PartStream_1;
 	hasRequiredPartStream = 1;
 
-	const inherits = require$$1$1.inherits;
-	const ReadableStream = require$$0$7.Readable;
+	const inherits = __require$1().inherits;
+	const ReadableStream = __require$2().Readable;
 
 	function PartStream (opts) {
 	  ReadableStream.call(this, opts);
@@ -2010,8 +2017,8 @@ function requireHeaderParser () {
 	if (hasRequiredHeaderParser) return HeaderParser_1;
 	hasRequiredHeaderParser = 1;
 
-	const EventEmitter = require$$0$6.EventEmitter;
-	const inherits = require$$1$1.inherits;
+	const EventEmitter = __require().EventEmitter;
+	const inherits = __require$1().inherits;
 	const getLimit = requireGetLimit();
 
 	const StreamSearch = requireSbmh();
@@ -2118,8 +2125,8 @@ function requireDicer () {
 	if (hasRequiredDicer) return Dicer_1;
 	hasRequiredDicer = 1;
 
-	const WritableStream = require$$0$7.Writable;
-	const inherits = require$$1$1.inherits;
+	const WritableStream = __require$2().Writable;
+	const inherits = __require$1().inherits;
 
 	const StreamSearch = requireSbmh();
 
@@ -2695,8 +2702,8 @@ function requireMultipart () {
 	//  * support limits.fieldNameSize
 	//     -- this will require modifications to utils.parseParams
 
-	const { Readable } = require$$0$7;
-	const { inherits } = require$$1$1;
+	const { Readable } = __require$2();
+	const { inherits } = __require$1();
 
 	const Dicer = requireDicer();
 
@@ -3261,8 +3268,8 @@ function requireMain () {
 	if (hasRequiredMain) return main.exports;
 	hasRequiredMain = 1;
 
-	const WritableStream = require$$0$7.Writable;
-	const { inherits } = require$$1$1;
+	const WritableStream = __require$2().Writable;
+	const { inherits } = __require$1();
 	const Dicer = requireDicer();
 
 	const MultipartParser = requireMultipart();
@@ -3354,7 +3361,7 @@ function requireConstants$3 () {
 	if (hasRequiredConstants$3) return constants$3;
 	hasRequiredConstants$3 = 1;
 
-	const { MessageChannel, receiveMessageOnPort } = require$$0$8;
+	const { MessageChannel, receiveMessageOnPort } = require$$0$6;
 
 	const corsSafeListedMethods = ['GET', 'HEAD', 'POST'];
 	const corsSafeListedMethodsSet = new Set(corsSafeListedMethods);
@@ -14110,7 +14117,7 @@ function requirePendingInterceptorsFormatter () {
 	hasRequiredPendingInterceptorsFormatter = 1;
 
 	const { Transform } = require$$0$5;
-	const { Console } = require$$1$2;
+	const { Console } = require$$1$1;
 
 	/**
 	 * Gets the output of `console.table(…)` as a string.
@@ -14337,7 +14344,7 @@ function requireProxyAgent () {
 	hasRequiredProxyAgent = 1;
 
 	const { kProxy, kClose, kDestroy, kInterceptors } = requireSymbols$4();
-	const { URL } = require$$1$3;
+	const { URL } = require$$1$2;
 	const Agent = requireAgent();
 	const Pool = requirePool();
 	const DispatcherBase = requireDispatcherBase();
@@ -22287,7 +22294,7 @@ function requireEvents () {
 
 	const { webidl } = requireWebidl();
 	const { kEnumerableProperty } = requireUtil$6();
-	const { MessagePort } = require$$0$8;
+	const { MessagePort } = require$$0$6;
 
 	/**
 	 * @see https://html.spec.whatwg.org/multipage/comms.html#messageevent
@@ -22804,7 +22811,7 @@ function requireConnection () {
 	if (hasRequiredConnection) return connection;
 	hasRequiredConnection = 1;
 
-	const diagnosticsChannel = require$$0$9;
+	const diagnosticsChannel = require$$0$7;
 	const { uid, states } = requireConstants();
 	const {
 	  kReadyState,
@@ -23185,7 +23192,7 @@ function requireReceiver () {
 	hasRequiredReceiver = 1;
 
 	const { Writable } = require$$0$5;
-	const diagnosticsChannel = require$$0$9;
+	const diagnosticsChannel = require$$0$7;
 	const { parserStates, opcodes, states, emptyBuffer } = requireConstants();
 	const { kReadyState, kSentClose, kResponse, kReceivedClose } = requireSymbols();
 	const { isValidStatusCode, failWebsocketConnection, websocketMessageReceived } = requireUtil();
@@ -25508,7 +25515,7 @@ function requirePathUtils () {
 	};
 	Object.defineProperty(pathUtils, "__esModule", { value: true });
 	pathUtils.toPlatformPath = pathUtils.toWin32Path = pathUtils.toPosixPath = void 0;
-	const path = __importStar(require$$1$4);
+	const path = __importStar(require$$1$3);
 	/**
 	 * toPosixPath converts the given path to the posix form. On Windows, \\ will be
 	 * replaced with /.
@@ -25595,7 +25602,7 @@ function requireIoUtil () {
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.getCmdPath = exports.tryGetExecutablePath = exports.isRooted = exports.isDirectory = exports.exists = exports.READONLY = exports.UV_FS_O_EXLOCK = exports.IS_WINDOWS = exports.unlink = exports.symlink = exports.stat = exports.rmdir = exports.rm = exports.rename = exports.readlink = exports.readdir = exports.open = exports.mkdir = exports.lstat = exports.copyFile = exports.chmod = void 0;
 		const fs = __importStar(fs__default);
-		const path = __importStar(require$$1$4);
+		const path = __importStar(require$$1$3);
 		_a = fs.promises
 		// export const {open} = 'fs'
 		, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.open = _a.open, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rm = _a.rm, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
@@ -25785,7 +25792,7 @@ function requireIo () {
 	Object.defineProperty(io, "__esModule", { value: true });
 	io.findInPath = io.which = io.mkdirP = io.rmRF = io.mv = io.cp = void 0;
 	const assert_1 = require$$0$3;
-	const path = __importStar(require$$1$4);
+	const path = __importStar(require$$1$3);
 	const ioUtil = __importStar(requireIoUtil());
 	/**
 	 * Copies a file or folder.
@@ -26093,7 +26100,7 @@ function requireToolrunner () {
 	const os = __importStar(require$$0);
 	const events = __importStar(require$$4);
 	const child = __importStar(require$$2$2);
-	const path = __importStar(require$$1$4);
+	const path = __importStar(require$$1$3);
 	const io = __importStar(requireIo());
 	const ioUtil = __importStar(requireIoUtil());
 	const timers_1 = require$$6$1;
@@ -26937,7 +26944,7 @@ function requireCore () {
 		const file_command_1 = requireFileCommand();
 		const utils_1 = requireUtils$1();
 		const os = __importStar(require$$0);
-		const path = __importStar(require$$1$4);
+		const path = __importStar(require$$1$3);
 		const oidc_utils_1 = requireOidcUtils();
 		/**
 		 * The code to exit an action
@@ -27479,7 +27486,7 @@ const safeJSON = (text) => {
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const VERSION = '5.8.2'; // x-release-please-version
+const VERSION = '6.6.0'; // x-release-please-version
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 const isRunningInBrowser = () => {
@@ -28231,13 +28238,95 @@ function findDoubleNewlineIndex(buffer) {
     return -1;
 }
 
-class Stream {
-    constructor(iterator, controller) {
-        this.iterator = iterator;
-        this.controller = controller;
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+const levelNumbers = {
+    off: 0,
+    error: 200,
+    warn: 300,
+    info: 400,
+    debug: 500,
+};
+const parseLogLevel = (maybeLevel, sourceName, client) => {
+    if (!maybeLevel) {
+        return undefined;
     }
-    static fromSSEResponse(response, controller) {
+    if (hasOwn(levelNumbers, maybeLevel)) {
+        return maybeLevel;
+    }
+    loggerFor(client).warn(`${sourceName} was set to ${JSON.stringify(maybeLevel)}, expected one of ${JSON.stringify(Object.keys(levelNumbers))}`);
+    return undefined;
+};
+function noop() { }
+function makeLogFn(fnLevel, logger, logLevel) {
+    if (!logger || levelNumbers[fnLevel] > levelNumbers[logLevel]) {
+        return noop;
+    }
+    else {
+        // Don't wrap logger functions, we want the stacktrace intact!
+        return logger[fnLevel].bind(logger);
+    }
+}
+const noopLogger = {
+    error: noop,
+    warn: noop,
+    info: noop,
+    debug: noop,
+};
+let cachedLoggers = /* @__PURE__ */ new WeakMap();
+function loggerFor(client) {
+    const logger = client.logger;
+    const logLevel = client.logLevel ?? 'off';
+    if (!logger) {
+        return noopLogger;
+    }
+    const cachedLogger = cachedLoggers.get(logger);
+    if (cachedLogger && cachedLogger[0] === logLevel) {
+        return cachedLogger[1];
+    }
+    const levelLogger = {
+        error: makeLogFn('error', logger, logLevel),
+        warn: makeLogFn('warn', logger, logLevel),
+        info: makeLogFn('info', logger, logLevel),
+        debug: makeLogFn('debug', logger, logLevel),
+    };
+    cachedLoggers.set(logger, [logLevel, levelLogger]);
+    return levelLogger;
+}
+const formatRequestDetails = (details) => {
+    if (details.options) {
+        details.options = { ...details.options };
+        delete details.options['headers']; // redundant + leaks internals
+    }
+    if (details.headers) {
+        details.headers = Object.fromEntries((details.headers instanceof Headers ? [...details.headers] : Object.entries(details.headers)).map(([name, value]) => [
+            name,
+            (name.toLowerCase() === 'authorization' ||
+                name.toLowerCase() === 'cookie' ||
+                name.toLowerCase() === 'set-cookie') ?
+                '***'
+                : value,
+        ]));
+    }
+    if ('retryOfRequestLogID' in details) {
+        if (details.retryOfRequestLogID) {
+            details.retryOf = details.retryOfRequestLogID;
+        }
+        delete details.retryOfRequestLogID;
+    }
+    return details;
+};
+
+var _Stream_client;
+class Stream {
+    constructor(iterator, controller, client) {
+        this.iterator = iterator;
+        _Stream_client.set(this, void 0);
+        this.controller = controller;
+        __classPrivateFieldSet(this, _Stream_client, client);
+    }
+    static fromSSEResponse(response, controller, client) {
         let consumed = false;
+        const logger = client ? loggerFor(client) : console;
         async function* iterator() {
             if (consumed) {
                 throw new OpenAIError('Cannot iterate over a consumed stream, use `.tee()` to split the stream.');
@@ -28252,16 +28341,14 @@ class Stream {
                         done = true;
                         continue;
                     }
-                    if (sse.event === null ||
-                        sse.event.startsWith('response.') ||
-                        sse.event.startsWith('transcript.')) {
+                    if (sse.event === null || !sse.event.startsWith('thread.')) {
                         let data;
                         try {
                             data = JSON.parse(sse.data);
                         }
                         catch (e) {
-                            console.error(`Could not parse message into JSON:`, sse.data);
-                            console.error(`From chunk:`, sse.raw);
+                            logger.error(`Could not parse message into JSON:`, sse.data);
+                            logger.error(`From chunk:`, sse.raw);
                             throw e;
                         }
                         if (data && data.error) {
@@ -28300,13 +28387,13 @@ class Stream {
                     controller.abort();
             }
         }
-        return new Stream(iterator, controller);
+        return new Stream(iterator, controller, client);
     }
     /**
      * Generates a Stream from a newline-separated ReadableStream
      * where each item is a JSON value.
      */
-    static fromReadableStream(readableStream, controller) {
+    static fromReadableStream(readableStream, controller, client) {
         let consumed = false;
         async function* iterLines() {
             const lineDecoder = new LineDecoder();
@@ -28347,9 +28434,9 @@ class Stream {
                     controller.abort();
             }
         }
-        return new Stream(iterator, controller);
+        return new Stream(iterator, controller, client);
     }
-    [Symbol.asyncIterator]() {
+    [(_Stream_client = new WeakMap(), Symbol.asyncIterator)]() {
         return this.iterator();
     }
     /**
@@ -28373,8 +28460,8 @@ class Stream {
             };
         };
         return [
-            new Stream(() => teeIterator(left), this.controller),
-            new Stream(() => teeIterator(right), this.controller),
+            new Stream(() => teeIterator(left), this.controller, __classPrivateFieldGet(this, _Stream_client, "f")),
+            new Stream(() => teeIterator(right), this.controller, __classPrivateFieldGet(this, _Stream_client, "f")),
         ];
     }
     /**
@@ -28509,84 +28596,6 @@ function partition(str, delimiter) {
 }
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
-const levelNumbers = {
-    off: 0,
-    error: 200,
-    warn: 300,
-    info: 400,
-    debug: 500,
-};
-const parseLogLevel = (maybeLevel, sourceName, client) => {
-    if (!maybeLevel) {
-        return undefined;
-    }
-    if (hasOwn(levelNumbers, maybeLevel)) {
-        return maybeLevel;
-    }
-    loggerFor(client).warn(`${sourceName} was set to ${JSON.stringify(maybeLevel)}, expected one of ${JSON.stringify(Object.keys(levelNumbers))}`);
-    return undefined;
-};
-function noop() { }
-function makeLogFn(fnLevel, logger, logLevel) {
-    if (!logger || levelNumbers[fnLevel] > levelNumbers[logLevel]) {
-        return noop;
-    }
-    else {
-        // Don't wrap logger functions, we want the stacktrace intact!
-        return logger[fnLevel].bind(logger);
-    }
-}
-const noopLogger = {
-    error: noop,
-    warn: noop,
-    info: noop,
-    debug: noop,
-};
-let cachedLoggers = /** @__PURE__ */ new WeakMap();
-function loggerFor(client) {
-    const logger = client.logger;
-    const logLevel = client.logLevel ?? 'off';
-    if (!logger) {
-        return noopLogger;
-    }
-    const cachedLogger = cachedLoggers.get(logger);
-    if (cachedLogger && cachedLogger[0] === logLevel) {
-        return cachedLogger[1];
-    }
-    const levelLogger = {
-        error: makeLogFn('error', logger, logLevel),
-        warn: makeLogFn('warn', logger, logLevel),
-        info: makeLogFn('info', logger, logLevel),
-        debug: makeLogFn('debug', logger, logLevel),
-    };
-    cachedLoggers.set(logger, [logLevel, levelLogger]);
-    return levelLogger;
-}
-const formatRequestDetails = (details) => {
-    if (details.options) {
-        details.options = { ...details.options };
-        delete details.options['headers']; // redundant + leaks internals
-    }
-    if (details.headers) {
-        details.headers = Object.fromEntries((details.headers instanceof Headers ? [...details.headers] : Object.entries(details.headers)).map(([name, value]) => [
-            name,
-            (name.toLowerCase() === 'authorization' ||
-                name.toLowerCase() === 'cookie' ||
-                name.toLowerCase() === 'set-cookie') ?
-                '***'
-                : value,
-        ]));
-    }
-    if ('retryOfRequestLogID' in details) {
-        if (details.retryOfRequestLogID) {
-            details.retryOf = details.retryOfRequestLogID;
-        }
-        delete details.retryOfRequestLogID;
-    }
-    return details;
-};
-
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 async function defaultParseResponse(client, props) {
     const { response, requestLogID, retryOfRequestLogID, startTime } = props;
     const body = await (async () => {
@@ -28595,9 +28604,9 @@ async function defaultParseResponse(client, props) {
             // Note: there is an invariant here that isn't represented in the type system
             // that if you set `stream: true` the response type must also be `Stream<T>`
             if (props.options.__streamClass) {
-                return props.options.__streamClass.fromSSEResponse(response, props.controller);
+                return props.options.__streamClass.fromSSEResponse(response, props.controller, client);
             }
-            return Stream.fromSSEResponse(response, props.controller);
+            return Stream.fromSSEResponse(response, props.controller, client);
         }
         // fetch refuses to read the body when the status code is 204.
         if (response.status === 204) {
@@ -28817,6 +28826,36 @@ class CursorPage extends AbstractPage {
         };
     }
 }
+class ConversationCursorPage extends AbstractPage {
+    constructor(client, response, body, options) {
+        super(client, response, body, options);
+        this.data = body.data || [];
+        this.has_more = body.has_more || false;
+        this.last_id = body.last_id || '';
+    }
+    getPaginatedItems() {
+        return this.data ?? [];
+    }
+    hasNextPage() {
+        if (this.has_more === false) {
+            return false;
+        }
+        return super.hasNextPage();
+    }
+    nextPageRequestOptions() {
+        const cursor = this.last_id;
+        if (!cursor) {
+            return null;
+        }
+        return {
+            ...this.options,
+            query: {
+                ...maybeObj(this.options.query),
+                after: cursor,
+            },
+        };
+    }
+}
 
 const checkFileSupport = () => {
     if (typeof File === 'undefined') {
@@ -28848,10 +28887,19 @@ function getName(value) {
         .pop() || undefined);
 }
 const isAsyncIterable = (value) => value != null && typeof value === 'object' && typeof value[Symbol.asyncIterator] === 'function';
+/**
+ * Returns a multipart/form-data request if any part of the given request body contains a File / Blob value.
+ * Otherwise returns the request as is.
+ */
+const maybeMultipartFormRequestOptions = async (opts, fetch) => {
+    if (!hasUploadableValue(opts.body))
+        return opts;
+    return { ...opts, body: await createForm(opts.body, fetch) };
+};
 const multipartFormRequestOptions = async (opts, fetch) => {
     return { ...opts, body: await createForm(opts.body, fetch) };
 };
-const supportsFormDataMap = /** @__PURE__ */ new WeakMap();
+const supportsFormDataMap = /* @__PURE__ */ new WeakMap();
 /**
  * node-fetch doesn't support the global FormData object in recent node versions. Instead of sending
  * properly-encoded form data, it just stringifies the object, resulting in a request body of "[object FormData]".
@@ -28893,6 +28941,22 @@ const createForm = async (body, fetch) => {
 // We check for Blob not File because Bun.File doesn't inherit from File,
 // but they both inherit from Blob and have a `name` property at runtime.
 const isNamedBlob = (value) => value instanceof Blob && 'name' in value;
+const isUploadable = (value) => typeof value === 'object' &&
+    value !== null &&
+    (value instanceof Response || isAsyncIterable(value) || isNamedBlob(value));
+const hasUploadableValue = (value) => {
+    if (isUploadable(value))
+        return true;
+    if (Array.isArray(value))
+        return value.some(hasUploadableValue);
+    if (value && typeof value === 'object') {
+        for (const k in value) {
+            if (hasUploadableValue(value[k]))
+                return true;
+        }
+    }
+    return false;
+};
 const addFormValue = async (form, key, value) => {
     if (value === undefined)
         return;
@@ -28947,7 +29011,7 @@ const isResponseLike = (value) => value != null &&
     typeof value.blob === 'function';
 /**
  * Helper for creating a {@link File} to pass to an SDK upload method from a variety of different data formats
- * @param value the raw content of the file.  Can be an {@link Uploadable}, {@link BlobLikePart}, or {@link AsyncIterable} of {@link BlobLikePart}s
+ * @param value the raw content of the file. Can be an {@link Uploadable}, BlobLikePart, or AsyncIterable of BlobLikeParts
  * @param {string=} name the name of the file. If omitted, toFile will try to determine a file name from bits if possible
  * @param {Object=} options additional properties
  * @param {string=} options.type the MIME type of the content
@@ -29027,21 +29091,38 @@ class APIResource {
 function encodeURIPath(str) {
     return str.replace(/[^A-Za-z0-9\-._~!$&'()*+,;=:@]+/g, encodeURIComponent);
 }
+const EMPTY = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.create(null));
 const createPathTagFunction = (pathEncoder = encodeURIPath) => function path(statics, ...params) {
     // If there are no params, no processing is needed.
     if (statics.length === 1)
         return statics[0];
     let postPath = false;
+    const invalidSegments = [];
     const path = statics.reduce((previousValue, currentValue, index) => {
         if (/[?#]/.test(currentValue)) {
             postPath = true;
         }
-        return (previousValue +
-            currentValue +
-            (index === params.length ? '' : (postPath ? encodeURIComponent : pathEncoder)(String(params[index]))));
+        const value = params[index];
+        let encoded = (postPath ? encodeURIComponent : pathEncoder)('' + value);
+        if (index !== params.length &&
+            (value == null ||
+                (typeof value === 'object' &&
+                    // handle values from other realms
+                    value.toString ===
+                        Object.getPrototypeOf(Object.getPrototypeOf(value.hasOwnProperty ?? EMPTY) ?? EMPTY)
+                            ?.toString))) {
+            encoded = value + '';
+            invalidSegments.push({
+                start: previousValue.length + currentValue.length,
+                length: encoded.length,
+                error: `Value of type ${Object.prototype.toString
+                    .call(value)
+                    .slice(8, -1)} is not a valid path parameter`,
+            });
+        }
+        return previousValue + currentValue + (index === params.length ? '' : encoded);
     }, '');
     const pathOnly = path.split(/[?#]/, 1)[0];
-    const invalidSegments = [];
     const invalidSegmentPattern = /(?<=^|\/)(?:\.|%2e){1,2}(?=\/|$)/gi;
     let match;
     // Find all invalid segments
@@ -29049,8 +29130,10 @@ const createPathTagFunction = (pathEncoder = encodeURIPath) => function path(sta
         invalidSegments.push({
             start: match.index,
             length: match[0].length,
+            error: `Value "${match[0]}" can\'t be safely passed as a path parameter`,
         });
     }
+    invalidSegments.sort((a, b) => a.start - b.start);
     if (invalidSegments.length > 0) {
         let lastEnd = 0;
         const underline = invalidSegments.reduce((acc, segment) => {
@@ -29059,7 +29142,9 @@ const createPathTagFunction = (pathEncoder = encodeURIPath) => function path(sta
             lastEnd = segment.start + segment.length;
             return acc + spaces + arrows;
         }, '');
-        throw new OpenAIError(`Path parameters result in path with invalid segments:\n${path}\n${underline}`);
+        throw new OpenAIError(`Path parameters result in path with invalid segments:\n${invalidSegments
+            .map((e) => e.error)
+            .join('\n')}\n${path}\n${underline}`);
     }
     return path;
 };
@@ -29089,8 +29174,119 @@ let Messages$1 = class Messages extends APIResource {
     }
 };
 
-function isRunnableFunctionWithParse(fn) {
-    return typeof fn.parse === 'function';
+function isChatCompletionFunctionTool(tool) {
+    return tool !== undefined && 'function' in tool && tool.function !== undefined;
+}
+function isAutoParsableResponseFormat(response_format) {
+    return response_format?.['$brand'] === 'auto-parseable-response-format';
+}
+function isAutoParsableTool$1(tool) {
+    return tool?.['$brand'] === 'auto-parseable-tool';
+}
+function maybeParseChatCompletion(completion, params) {
+    if (!params || !hasAutoParseableInput$1(params)) {
+        return {
+            ...completion,
+            choices: completion.choices.map((choice) => {
+                assertToolCallsAreChatCompletionFunctionToolCalls(choice.message.tool_calls);
+                return {
+                    ...choice,
+                    message: {
+                        ...choice.message,
+                        parsed: null,
+                        ...(choice.message.tool_calls ?
+                            {
+                                tool_calls: choice.message.tool_calls,
+                            }
+                            : undefined),
+                    },
+                };
+            }),
+        };
+    }
+    return parseChatCompletion(completion, params);
+}
+function parseChatCompletion(completion, params) {
+    const choices = completion.choices.map((choice) => {
+        if (choice.finish_reason === 'length') {
+            throw new LengthFinishReasonError();
+        }
+        if (choice.finish_reason === 'content_filter') {
+            throw new ContentFilterFinishReasonError();
+        }
+        assertToolCallsAreChatCompletionFunctionToolCalls(choice.message.tool_calls);
+        return {
+            ...choice,
+            message: {
+                ...choice.message,
+                ...(choice.message.tool_calls ?
+                    {
+                        tool_calls: choice.message.tool_calls?.map((toolCall) => parseToolCall$1(params, toolCall)) ?? undefined,
+                    }
+                    : undefined),
+                parsed: choice.message.content && !choice.message.refusal ?
+                    parseResponseFormat(params, choice.message.content)
+                    : null,
+            },
+        };
+    });
+    return { ...completion, choices };
+}
+function parseResponseFormat(params, content) {
+    if (params.response_format?.type !== 'json_schema') {
+        return null;
+    }
+    if (params.response_format?.type === 'json_schema') {
+        if ('$parseRaw' in params.response_format) {
+            const response_format = params.response_format;
+            return response_format.$parseRaw(content);
+        }
+        return JSON.parse(content);
+    }
+    return null;
+}
+function parseToolCall$1(params, toolCall) {
+    const inputTool = params.tools?.find((inputTool) => isChatCompletionFunctionTool(inputTool) && inputTool.function?.name === toolCall.function.name); // TS doesn't narrow based on isChatCompletionTool
+    return {
+        ...toolCall,
+        function: {
+            ...toolCall.function,
+            parsed_arguments: isAutoParsableTool$1(inputTool) ? inputTool.$parseRaw(toolCall.function.arguments)
+                : inputTool?.function.strict ? JSON.parse(toolCall.function.arguments)
+                    : null,
+        },
+    };
+}
+function shouldParseToolCall(params, toolCall) {
+    if (!params || !('tools' in params) || !params.tools) {
+        return false;
+    }
+    const inputTool = params.tools?.find((inputTool) => isChatCompletionFunctionTool(inputTool) && inputTool.function?.name === toolCall.function.name);
+    return (isChatCompletionFunctionTool(inputTool) &&
+        (isAutoParsableTool$1(inputTool) || inputTool?.function.strict || false));
+}
+function hasAutoParseableInput$1(params) {
+    if (isAutoParsableResponseFormat(params.response_format)) {
+        return true;
+    }
+    return (params.tools?.some((t) => isAutoParsableTool$1(t) || (t.type === 'function' && t.function.strict === true)) ?? false);
+}
+function assertToolCallsAreChatCompletionFunctionToolCalls(toolCalls) {
+    for (const toolCall of toolCalls || []) {
+        if (toolCall.type !== 'function') {
+            throw new OpenAIError(`Currently only \`function\` tool calls are supported; Received \`${toolCall.type}\``);
+        }
+    }
+}
+function validateInputTools(tools) {
+    for (const tool of tools ?? []) {
+        if (tool.type !== 'function') {
+            throw new OpenAIError(`Currently only \`function\` tool types support auto-parsing; Received \`${tool.type}\``);
+        }
+        if (tool.function.strict !== true) {
+            throw new OpenAIError(`The \`${tool.function.name}\` tool is not marked with \`strict: true\`. Only strict function tools can be auto-parsed`);
+        }
+    }
 }
 
 const isAssistantMessage = (message) => {
@@ -29284,104 +29480,8 @@ _EventStream_connectedPromise = new WeakMap(), _EventStream_resolveConnectedProm
     return this._emit('error', new OpenAIError(String(error)));
 };
 
-function isAutoParsableResponseFormat(response_format) {
-    return response_format?.['$brand'] === 'auto-parseable-response-format';
-}
-function isAutoParsableTool$1(tool) {
-    return tool?.['$brand'] === 'auto-parseable-tool';
-}
-function maybeParseChatCompletion(completion, params) {
-    if (!params || !hasAutoParseableInput$1(params)) {
-        return {
-            ...completion,
-            choices: completion.choices.map((choice) => ({
-                ...choice,
-                message: {
-                    ...choice.message,
-                    parsed: null,
-                    ...(choice.message.tool_calls ?
-                        {
-                            tool_calls: choice.message.tool_calls,
-                        }
-                        : undefined),
-                },
-            })),
-        };
-    }
-    return parseChatCompletion(completion, params);
-}
-function parseChatCompletion(completion, params) {
-    const choices = completion.choices.map((choice) => {
-        if (choice.finish_reason === 'length') {
-            throw new LengthFinishReasonError();
-        }
-        if (choice.finish_reason === 'content_filter') {
-            throw new ContentFilterFinishReasonError();
-        }
-        return {
-            ...choice,
-            message: {
-                ...choice.message,
-                ...(choice.message.tool_calls ?
-                    {
-                        tool_calls: choice.message.tool_calls?.map((toolCall) => parseToolCall$1(params, toolCall)) ?? undefined,
-                    }
-                    : undefined),
-                parsed: choice.message.content && !choice.message.refusal ?
-                    parseResponseFormat(params, choice.message.content)
-                    : null,
-            },
-        };
-    });
-    return { ...completion, choices };
-}
-function parseResponseFormat(params, content) {
-    if (params.response_format?.type !== 'json_schema') {
-        return null;
-    }
-    if (params.response_format?.type === 'json_schema') {
-        if ('$parseRaw' in params.response_format) {
-            const response_format = params.response_format;
-            return response_format.$parseRaw(content);
-        }
-        return JSON.parse(content);
-    }
-    return null;
-}
-function parseToolCall$1(params, toolCall) {
-    const inputTool = params.tools?.find((inputTool) => inputTool.function?.name === toolCall.function.name);
-    return {
-        ...toolCall,
-        function: {
-            ...toolCall.function,
-            parsed_arguments: isAutoParsableTool$1(inputTool) ? inputTool.$parseRaw(toolCall.function.arguments)
-                : inputTool?.function.strict ? JSON.parse(toolCall.function.arguments)
-                    : null,
-        },
-    };
-}
-function shouldParseToolCall(params, toolCall) {
-    if (!params) {
-        return false;
-    }
-    const inputTool = params.tools?.find((inputTool) => inputTool.function?.name === toolCall.function.name);
-    return isAutoParsableTool$1(inputTool) || inputTool?.function.strict || false;
-}
-function hasAutoParseableInput$1(params) {
-    if (isAutoParsableResponseFormat(params.response_format)) {
-        return true;
-    }
-    return (params.tools?.some((t) => isAutoParsableTool$1(t) || (t.type === 'function' && t.function.strict === true)) ?? false);
-}
-function validateInputTools(tools) {
-    for (const tool of tools ?? []) {
-        if (tool.type !== 'function') {
-            throw new OpenAIError(`Currently only \`function\` tool types support auto-parsing; Received \`${tool.type}\``);
-        }
-        if (tool.function.strict !== true) {
-            throw new OpenAIError(`The \`${tool.function.name}\` tool is not marked with \`strict: true\`. Only strict function tools can be auto-parsed`);
-        }
-    }
+function isRunnableFunctionWithParse(fn) {
+    return typeof fn.parse === 'function';
 }
 
 var _AbstractChatCompletionRunner_instances, _AbstractChatCompletionRunner_getFinalContent, _AbstractChatCompletionRunner_getFinalMessage, _AbstractChatCompletionRunner_getFinalFunctionToolCall, _AbstractChatCompletionRunner_getFinalFunctionToolCallResult, _AbstractChatCompletionRunner_calculateTotalUsage, _AbstractChatCompletionRunner_validateParams, _AbstractChatCompletionRunner_stringifyFunctionCallResult;
@@ -29507,7 +29607,7 @@ class AbstractChatCompletionRunner extends EventStream {
     async _runTools(client, params, options) {
         const role = 'tool';
         const { tool_choice = 'auto', stream, ...restParams } = params;
-        const singleFunctionToCall = typeof tool_choice !== 'string' && tool_choice?.function?.name;
+        const singleFunctionToCall = typeof tool_choice !== 'string' && tool_choice.type === 'function' && tool_choice?.function?.name;
         const { maxChatCompletions = DEFAULT_MAX_CHAT_COMPLETIONS } = options || {};
         // TODO(someday): clean this logic up
         const inputTools = params.tools.map((tool) => {
@@ -29625,7 +29725,7 @@ _AbstractChatCompletionRunner_instances = new WeakSet(), _AbstractChatCompletion
     for (let i = this.messages.length - 1; i >= 0; i--) {
         const message = this.messages[i];
         if (isAssistantMessage(message) && message?.tool_calls?.length) {
-            return message.tool_calls.at(-1)?.function;
+            return message.tool_calls.filter((x) => x.type === 'function').at(-1)?.function;
         }
     }
     return;
@@ -30103,7 +30203,7 @@ class ChatCompletionStream extends AbstractChatCompletionRunner {
             throw new Error('tool call snapshot missing `type`');
         }
         if (toolCallSnapshot.type === 'function') {
-            const inputTool = __classPrivateFieldGet(this, _ChatCompletionStream_params, "f")?.tools?.find((tool) => tool.type === 'function' && tool.function.name === toolCallSnapshot.function.name);
+            const inputTool = __classPrivateFieldGet(this, _ChatCompletionStream_params, "f")?.tools?.find((tool) => isChatCompletionFunctionTool(tool) && tool.function.name === toolCallSnapshot.function.name); // TS doesn't narrow based on isChatCompletionTool
             this._emit('tool_calls.function.arguments.done', {
                 name: toolCallSnapshot.function.name,
                 index: toolCallIndex,
@@ -30762,7 +30862,7 @@ class Assistants extends APIResource {
 }
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
-class Sessions extends APIResource {
+let Sessions$1 = class Sessions extends APIResource {
     /**
      * Create an ephemeral API token for use in client-side applications with the
      * Realtime API. Can be configured with the same session parameters as the
@@ -30785,7 +30885,7 @@ class Sessions extends APIResource {
             headers: buildHeaders([{ 'OpenAI-Beta': 'assistants=v2' }, options?.headers]),
         });
     }
-}
+};
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 class TranscriptionSessions extends APIResource {
@@ -30814,15 +30914,136 @@ class TranscriptionSessions extends APIResource {
 }
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
-class Realtime extends APIResource {
+/**
+ * @deprecated Realtime has now launched and is generally available. The old beta API is now deprecated.
+ */
+let Realtime$1 = class Realtime extends APIResource {
+    constructor() {
+        super(...arguments);
+        this.sessions = new Sessions$1(this._client);
+        this.transcriptionSessions = new TranscriptionSessions(this._client);
+    }
+};
+Realtime$1.Sessions = Sessions$1;
+Realtime$1.TranscriptionSessions = TranscriptionSessions;
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class Sessions extends APIResource {
+    /**
+     * Create a ChatKit session
+     *
+     * @example
+     * ```ts
+     * const chatSession =
+     *   await client.beta.chatkit.sessions.create({
+     *     user: 'x',
+     *     workflow: { id: 'id' },
+     *   });
+     * ```
+     */
+    create(body, options) {
+        return this._client.post('/chatkit/sessions', {
+            body,
+            ...options,
+            headers: buildHeaders([{ 'OpenAI-Beta': 'chatkit_beta=v1' }, options?.headers]),
+        });
+    }
+    /**
+     * Cancel a ChatKit session
+     *
+     * @example
+     * ```ts
+     * const chatSession =
+     *   await client.beta.chatkit.sessions.cancel('cksess_123');
+     * ```
+     */
+    cancel(sessionID, options) {
+        return this._client.post(path `/chatkit/sessions/${sessionID}/cancel`, {
+            ...options,
+            headers: buildHeaders([{ 'OpenAI-Beta': 'chatkit_beta=v1' }, options?.headers]),
+        });
+    }
+}
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+let Threads$1 = class Threads extends APIResource {
+    /**
+     * Retrieve a ChatKit thread
+     *
+     * @example
+     * ```ts
+     * const chatkitThread =
+     *   await client.beta.chatkit.threads.retrieve('cthr_123');
+     * ```
+     */
+    retrieve(threadID, options) {
+        return this._client.get(path `/chatkit/threads/${threadID}`, {
+            ...options,
+            headers: buildHeaders([{ 'OpenAI-Beta': 'chatkit_beta=v1' }, options?.headers]),
+        });
+    }
+    /**
+     * List ChatKit threads
+     *
+     * @example
+     * ```ts
+     * // Automatically fetches more pages as needed.
+     * for await (const chatkitThread of client.beta.chatkit.threads.list()) {
+     *   // ...
+     * }
+     * ```
+     */
+    list(query = {}, options) {
+        return this._client.getAPIList('/chatkit/threads', (ConversationCursorPage), {
+            query,
+            ...options,
+            headers: buildHeaders([{ 'OpenAI-Beta': 'chatkit_beta=v1' }, options?.headers]),
+        });
+    }
+    /**
+     * Delete a ChatKit thread
+     *
+     * @example
+     * ```ts
+     * const thread = await client.beta.chatkit.threads.delete(
+     *   'cthr_123',
+     * );
+     * ```
+     */
+    delete(threadID, options) {
+        return this._client.delete(path `/chatkit/threads/${threadID}`, {
+            ...options,
+            headers: buildHeaders([{ 'OpenAI-Beta': 'chatkit_beta=v1' }, options?.headers]),
+        });
+    }
+    /**
+     * List ChatKit thread items
+     *
+     * @example
+     * ```ts
+     * // Automatically fetches more pages as needed.
+     * for await (const thread of client.beta.chatkit.threads.listItems(
+     *   'cthr_123',
+     * )) {
+     *   // ...
+     * }
+     * ```
+     */
+    listItems(threadID, query = {}, options) {
+        return this._client.getAPIList(path `/chatkit/threads/${threadID}/items`, (ConversationCursorPage), { query, ...options, headers: buildHeaders([{ 'OpenAI-Beta': 'chatkit_beta=v1' }, options?.headers]) });
+    }
+};
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class ChatKit extends APIResource {
     constructor() {
         super(...arguments);
         this.sessions = new Sessions(this._client);
-        this.transcriptionSessions = new TranscriptionSessions(this._client);
+        this.threads = new Threads$1(this._client);
     }
 }
-Realtime.Sessions = Sessions;
-Realtime.TranscriptionSessions = TranscriptionSessions;
+ChatKit.Sessions = Sessions;
+ChatKit.Threads = Threads$1;
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 /**
@@ -31760,12 +31981,14 @@ Threads.Messages = Messages;
 class Beta extends APIResource {
     constructor() {
         super(...arguments);
-        this.realtime = new Realtime(this._client);
+        this.realtime = new Realtime$1(this._client);
+        this.chatkit = new ChatKit(this._client);
         this.assistants = new Assistants(this._client);
         this.threads = new Threads(this._client);
     }
 }
-Beta.Realtime = Realtime;
+Beta.Realtime = Realtime$1;
+Beta.ChatKit = ChatKit;
 Beta.Assistants = Assistants;
 Beta.Threads = Threads;
 
@@ -31870,6 +32093,74 @@ class Containers extends APIResource {
     }
 }
 Containers.Files = Files$2;
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class Items extends APIResource {
+    /**
+     * Create items in a conversation with the given ID.
+     */
+    create(conversationID, params, options) {
+        const { include, ...body } = params;
+        return this._client.post(path `/conversations/${conversationID}/items`, {
+            query: { include },
+            body,
+            ...options,
+        });
+    }
+    /**
+     * Get a single item from a conversation with the given IDs.
+     */
+    retrieve(itemID, params, options) {
+        const { conversation_id, ...query } = params;
+        return this._client.get(path `/conversations/${conversation_id}/items/${itemID}`, { query, ...options });
+    }
+    /**
+     * List all items for a conversation with the given ID.
+     */
+    list(conversationID, query = {}, options) {
+        return this._client.getAPIList(path `/conversations/${conversationID}/items`, (ConversationCursorPage), { query, ...options });
+    }
+    /**
+     * Delete an item from a conversation with the given IDs.
+     */
+    delete(itemID, params, options) {
+        const { conversation_id } = params;
+        return this._client.delete(path `/conversations/${conversation_id}/items/${itemID}`, options);
+    }
+}
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class Conversations extends APIResource {
+    constructor() {
+        super(...arguments);
+        this.items = new Items(this._client);
+    }
+    /**
+     * Create a conversation.
+     */
+    create(body = {}, options) {
+        return this._client.post('/conversations', { body, ...options });
+    }
+    /**
+     * Get a conversation
+     */
+    retrieve(conversationID, options) {
+        return this._client.get(path `/conversations/${conversationID}`, options);
+    }
+    /**
+     * Update a conversation
+     */
+    update(conversationID, body, options) {
+        return this._client.post(path `/conversations/${conversationID}`, { body, ...options });
+    }
+    /**
+     * Delete a conversation. Items in the conversation will not be deleted.
+     */
+    delete(conversationID, options) {
+        return this._client.delete(path `/conversations/${conversationID}`, options);
+    }
+}
+Conversations.Items = Items;
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 class Embeddings extends APIResource {
@@ -32035,7 +32326,7 @@ let Files$1 = class Files extends APIResource {
     /**
      * Upload a file that can be used across various endpoints. Individual files can be
      * up to 512 MB, and the size of all files uploaded by one organization can be up
-     * to 100 GB.
+     * to 1 TB.
      *
      * The Assistants API supports files up to 2 million tokens and of specific file
      * types. See the
@@ -32071,7 +32362,7 @@ let Files$1 = class Files extends APIResource {
         return this._client.getAPIList('/files', (CursorPage), { query, ...options });
     }
     /**
-     * Delete a file.
+     * Delete a file and remove it from all vector stores.
      */
     delete(fileID, options) {
         return this._client.delete(path `/files/${fileID}`, options);
@@ -32414,34 +32705,11 @@ class Images extends APIResource {
     createVariation(body, options) {
         return this._client.post('/images/variations', multipartFormRequestOptions({ body, ...options }, this._client));
     }
-    /**
-     * Creates an edited or extended image given one or more source images and a
-     * prompt. This endpoint only supports `gpt-image-1` and `dall-e-2`.
-     *
-     * @example
-     * ```ts
-     * const imagesResponse = await client.images.edit({
-     *   image: fs.createReadStream('path/to/file'),
-     *   prompt: 'A cute baby sea otter wearing a beret',
-     * });
-     * ```
-     */
     edit(body, options) {
-        return this._client.post('/images/edits', multipartFormRequestOptions({ body, ...options }, this._client));
+        return this._client.post('/images/edits', multipartFormRequestOptions({ body, ...options, stream: body.stream ?? false }, this._client));
     }
-    /**
-     * Creates an image given a prompt.
-     * [Learn more](https://platform.openai.com/docs/guides/images).
-     *
-     * @example
-     * ```ts
-     * const imagesResponse = await client.images.generate({
-     *   prompt: 'A cute baby sea otter',
-     * });
-     * ```
-     */
     generate(body, options) {
-        return this._client.post('/images/generations', { body, ...options });
+        return this._client.post('/images/generations', { body, ...options, stream: body.stream ?? false });
     }
 }
 
@@ -32480,6 +32748,101 @@ class Moderations extends APIResource {
         return this._client.post('/moderations', { body, ...options });
     }
 }
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class Calls extends APIResource {
+    /**
+     * Accept an incoming SIP call and configure the realtime session that will handle
+     * it.
+     *
+     * @example
+     * ```ts
+     * await client.realtime.calls.accept('call_id', {
+     *   type: 'realtime',
+     * });
+     * ```
+     */
+    accept(callID, body, options) {
+        return this._client.post(path `/realtime/calls/${callID}/accept`, {
+            body,
+            ...options,
+            headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
+        });
+    }
+    /**
+     * End an active Realtime API call, whether it was initiated over SIP or WebRTC.
+     *
+     * @example
+     * ```ts
+     * await client.realtime.calls.hangup('call_id');
+     * ```
+     */
+    hangup(callID, options) {
+        return this._client.post(path `/realtime/calls/${callID}/hangup`, {
+            ...options,
+            headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
+        });
+    }
+    /**
+     * Transfer an active SIP call to a new destination using the SIP REFER verb.
+     *
+     * @example
+     * ```ts
+     * await client.realtime.calls.refer('call_id', {
+     *   target_uri: 'tel:+14155550123',
+     * });
+     * ```
+     */
+    refer(callID, body, options) {
+        return this._client.post(path `/realtime/calls/${callID}/refer`, {
+            body,
+            ...options,
+            headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
+        });
+    }
+    /**
+     * Decline an incoming SIP call by returning a SIP status code to the caller.
+     *
+     * @example
+     * ```ts
+     * await client.realtime.calls.reject('call_id');
+     * ```
+     */
+    reject(callID, body = {}, options) {
+        return this._client.post(path `/realtime/calls/${callID}/reject`, {
+            body,
+            ...options,
+            headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
+        });
+    }
+}
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class ClientSecrets extends APIResource {
+    /**
+     * Create a Realtime client secret with an associated session configuration.
+     *
+     * @example
+     * ```ts
+     * const clientSecret =
+     *   await client.realtime.clientSecrets.create();
+     * ```
+     */
+    create(body, options) {
+        return this._client.post('/realtime/client_secrets', { body, ...options });
+    }
+}
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class Realtime extends APIResource {
+    constructor() {
+        super(...arguments);
+        this.clientSecrets = new ClientSecrets(this._client);
+        this.calls = new Calls(this._client);
+    }
+}
+Realtime.ClientSecrets = ClientSecrets;
+Realtime.Calls = Calls;
 
 function maybeParseResponse(response, params) {
     if (!params || !hasAutoParseableInput(params)) {
@@ -32731,8 +33094,16 @@ class ResponseStream extends EventStream {
                 if (!output) {
                     throw new OpenAIError(`missing output at index ${event.output_index}`);
                 }
-                if (output.type === 'message') {
-                    output.content.push(event.part);
+                const type = output.type;
+                const part = event.part;
+                if (type === 'message' && part.type !== 'reasoning_text') {
+                    output.content.push(part);
+                }
+                else if (type === 'reasoning' && part.type === 'reasoning_text') {
+                    if (!output.content) {
+                        output.content = [];
+                    }
+                    output.content.push(part);
                 }
                 break;
             }
@@ -32760,6 +33131,23 @@ class ResponseStream extends EventStream {
                 }
                 if (output.type === 'function_call') {
                     output.arguments += event.delta;
+                }
+                break;
+            }
+            case 'response.reasoning_text.delta': {
+                const output = snapshot.output[event.output_index];
+                if (!output) {
+                    throw new OpenAIError(`missing output at index ${event.output_index}`);
+                }
+                if (output.type === 'reasoning') {
+                    const content = output.content?.[event.content_index];
+                    if (!content) {
+                        throw new OpenAIError(`missing content at index ${event.content_index}`);
+                    }
+                    if (content.type !== 'reasoning_text') {
+                        throw new OpenAIError(`expected content to be 'reasoning_text', got ${content.type}`);
+                    }
+                    content.text += event.delta;
                 }
                 break;
             }
@@ -32857,10 +33245,26 @@ class InputItems extends APIResource {
 }
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class InputTokens extends APIResource {
+    /**
+     * Get input token counts
+     *
+     * @example
+     * ```ts
+     * const response = await client.responses.inputTokens.count();
+     * ```
+     */
+    count(body = {}, options) {
+        return this._client.post('/responses/input_tokens', { body, ...options });
+    }
+}
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 class Responses extends APIResource {
     constructor() {
         super(...arguments);
         this.inputItems = new InputItems(this._client);
+        this.inputTokens = new InputTokens(this._client);
     }
     create(body, options) {
         return this._client.post('/responses', { body, ...options, stream: body.stream ?? false })._thenUnwrap((rsp) => {
@@ -32926,6 +33330,7 @@ class Responses extends APIResource {
     }
 }
 Responses.InputItems = InputItems;
+Responses.InputTokens = InputTokens;
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 class Parts extends APIResource {
@@ -33354,6 +33759,51 @@ VectorStores.Files = Files;
 VectorStores.FileBatches = FileBatches;
 
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+class Videos extends APIResource {
+    /**
+     * Create a video
+     */
+    create(body, options) {
+        return this._client.post('/videos', maybeMultipartFormRequestOptions({ body, ...options }, this._client));
+    }
+    /**
+     * Retrieve a video
+     */
+    retrieve(videoID, options) {
+        return this._client.get(path `/videos/${videoID}`, options);
+    }
+    /**
+     * List videos
+     */
+    list(query = {}, options) {
+        return this._client.getAPIList('/videos', (ConversationCursorPage), { query, ...options });
+    }
+    /**
+     * Delete a video
+     */
+    delete(videoID, options) {
+        return this._client.delete(path `/videos/${videoID}`, options);
+    }
+    /**
+     * Download video content
+     */
+    downloadContent(videoID, query = {}, options) {
+        return this._client.get(path `/videos/${videoID}/content`, {
+            query,
+            ...options,
+            headers: buildHeaders([{ Accept: 'application/binary' }, options?.headers]),
+            __binaryResponse: true,
+        });
+    }
+    /**
+     * Create a video remix
+     */
+    remix(videoID, body, options) {
+        return this._client.post(path `/videos/${videoID}/remix`, maybeMultipartFormRequestOptions({ body, ...options }, this._client));
+    }
+}
+
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 var _Webhooks_instances, _Webhooks_validateSecret, _Webhooks_getRequiredHeader;
 class Webhooks extends APIResource {
     constructor() {
@@ -33487,10 +33937,13 @@ class OpenAI {
         this.batches = new Batches(this);
         this.uploads = new Uploads(this);
         this.responses = new Responses(this);
+        this.realtime = new Realtime(this);
+        this.conversations = new Conversations(this);
         this.evals = new Evals(this);
         this.containers = new Containers(this);
+        this.videos = new Videos(this);
         if (apiKey === undefined) {
-            throw new OpenAIError("The OPENAI_API_KEY environment variable is missing or empty; either provide it, or instantiate the OpenAI client with an apiKey option, like new OpenAI({ apiKey: 'My API Key' }).");
+            throw new OpenAIError('Missing credentials. Please pass an `apiKey`, or set the `OPENAI_API_KEY` environment variable.');
         }
         const options = {
             apiKey,
@@ -33518,7 +33971,7 @@ class OpenAI {
         this.fetch = options.fetch ?? getDefaultFetch();
         __classPrivateFieldSet(this, _OpenAI_encoder, FallbackEncoder);
         this._options = options;
-        this.apiKey = apiKey;
+        this.apiKey = typeof apiKey === 'string' ? apiKey : 'Missing Key';
         this.organization = organization;
         this.project = project;
         this.webhookSecret = webhookSecret;
@@ -33527,7 +33980,7 @@ class OpenAI {
      * Create a new client instance re-using the same options given to the current client with optional overriding.
      */
     withOptions(options) {
-        return new this.constructor({
+        const client = new this.constructor({
             ...this._options,
             baseURL: this.baseURL,
             maxRetries: this.maxRetries,
@@ -33542,6 +33995,7 @@ class OpenAI {
             webhookSecret: this.webhookSecret,
             ...options,
         });
+        return client;
     }
     defaultQuery() {
         return this._options.defaultQuery;
@@ -33549,7 +34003,7 @@ class OpenAI {
     validateHeaders({ values, nulls }) {
         return;
     }
-    authHeaders(opts) {
+    async authHeaders(opts) {
         return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
     }
     stringifyQuery(query) {
@@ -33563,6 +34017,27 @@ class OpenAI {
     }
     makeStatusError(status, error, message, headers) {
         return APIError.generate(status, error, message, headers);
+    }
+    async _callApiKey() {
+        const apiKey = this._options.apiKey;
+        if (typeof apiKey !== 'function')
+            return false;
+        let token;
+        try {
+            token = await apiKey();
+        }
+        catch (err) {
+            if (err instanceof OpenAIError)
+                throw err;
+            throw new OpenAIError(`Failed to get token from 'apiKey' function: ${err.message}`, 
+            // @ts-ignore
+            { cause: err });
+        }
+        if (typeof token !== 'string' || !token) {
+            throw new OpenAIError(`Expected 'apiKey' function argument to return a string but it returned ${token}`);
+        }
+        this.apiKey = token;
+        return true;
     }
     buildURL(path, query, defaultBaseURL) {
         const baseURL = (!__classPrivateFieldGet(this, _OpenAI_instances, "m", _OpenAI_baseURLOverridden).call(this) && defaultBaseURL) || this.baseURL;
@@ -33581,7 +34056,9 @@ class OpenAI {
     /**
      * Used as a callback for mutating the given `FinalRequestOptions` object.
      */
-    async prepareOptions(options) { }
+    async prepareOptions(options) {
+        await this._callApiKey();
+    }
     /**
      * Used as a callback for mutating the given `RequestInit` object.
      *
@@ -33619,7 +34096,9 @@ class OpenAI {
             retriesRemaining = maxRetries;
         }
         await this.prepareOptions(options);
-        const { req, url, timeout } = this.buildRequest(options, { retryCount: maxRetries - retriesRemaining });
+        const { req, url, timeout } = await this.buildRequest(options, {
+            retryCount: maxRetries - retriesRemaining,
+        });
         await this.prepareRequest(req, { url, options });
         /** Not an API request ID, just for correlating local log entries. */
         const requestLogID = 'log_' + ((Math.random() * (1 << 24)) | 0).toString(16).padStart(6, '0');
@@ -33638,7 +34117,7 @@ class OpenAI {
         const controller = new AbortController();
         const response = await this.fetchWithTimeout(url, req, timeout, controller).catch(castToError);
         const headersTime = Date.now();
-        if (response instanceof Error) {
+        if (response instanceof globalThis.Error) {
             const retryMessage = `retrying, ${retriesRemaining} attempts remaining`;
             if (options.signal?.aborted) {
                 throw new APIUserAbortError();
@@ -33677,7 +34156,7 @@ class OpenAI {
             .join('');
         const responseInfo = `[${requestLogID}${retryLogStr}${specialHeaders}] ${req.method} ${url} ${response.ok ? 'succeeded' : 'failed'} with status ${response.status} in ${headersTime - startTime}ms`;
         if (!response.ok) {
-            const shouldRetry = this.shouldRetry(response);
+            const shouldRetry = await this.shouldRetry(response);
             if (retriesRemaining && shouldRetry) {
                 const retryMessage = `retrying, ${retriesRemaining} attempts remaining`;
                 // We don't need the body of this response.
@@ -33751,7 +34230,7 @@ class OpenAI {
             clearTimeout(timeout);
         }
     }
-    shouldRetry(response) {
+    async shouldRetry(response) {
         // Note this is not a standard header.
         const shouldRetryHeader = response.headers.get('x-should-retry');
         // If the server explicitly says whether or not to retry, obey.
@@ -33813,7 +34292,7 @@ class OpenAI {
         const jitter = 1 - Math.random() * 0.25;
         return sleepSeconds * jitter * 1000;
     }
-    buildRequest(inputOptions, { retryCount = 0 } = {}) {
+    async buildRequest(inputOptions, { retryCount = 0 } = {}) {
         const options = { ...inputOptions };
         const { method, path, query, defaultBaseURL } = options;
         const url = this.buildURL(path, query, defaultBaseURL);
@@ -33821,7 +34300,7 @@ class OpenAI {
             validatePositiveInteger('timeout', options.timeout);
         options.timeout = options.timeout ?? this.timeout;
         const { bodyHeaders, body } = this.buildBody({ options });
-        const reqHeaders = this.buildHeaders({ options: inputOptions, method, bodyHeaders, retryCount });
+        const reqHeaders = await this.buildHeaders({ options: inputOptions, method, bodyHeaders, retryCount });
         const req = {
             method,
             headers: reqHeaders,
@@ -33834,7 +34313,7 @@ class OpenAI {
         };
         return { req, url, timeout: options.timeout };
     }
-    buildHeaders({ options, method, bodyHeaders, retryCount, }) {
+    async buildHeaders({ options, method, bodyHeaders, retryCount, }) {
         let idempotencyHeaders = {};
         if (this.idempotencyHeader && method !== 'get') {
             if (!options.idempotencyKey)
@@ -33852,7 +34331,7 @@ class OpenAI {
                 'OpenAI-Organization': this.organization,
                 'OpenAI-Project': this.project,
             },
-            this.authHeaders(options),
+            await this.authHeaders(options),
             this._options.defaultHeaders,
             bodyHeaders,
             options.headers,
@@ -33874,7 +34353,7 @@ class OpenAI {
                 // Preserve legacy string encoding behavior for now
                 headers.values.has('content-type')) ||
             // `Blob` is superset of `File`
-            body instanceof Blob ||
+            (globalThis.Blob && body instanceof globalThis.Blob) ||
             // `FormData` -> `multipart/form-data`
             body instanceof FormData ||
             // `URLSearchParams` -> `application/x-www-form-urlencoded`
@@ -33929,8 +34408,11 @@ OpenAI.Beta = Beta;
 OpenAI.Batches = Batches;
 OpenAI.Uploads = Uploads;
 OpenAI.Responses = Responses;
+OpenAI.Realtime = Realtime;
+OpenAI.Conversations = Conversations;
 OpenAI.Evals = Evals;
 OpenAI.Containers = Containers;
+OpenAI.Videos = Videos;
 
 async function generateAIResponse(prompt, systemPrompt, model, token, schema) {
     const client = new OpenAI({
@@ -37188,7 +37670,7 @@ function requireRaw () {
 	        if (!domain) {
 	            // Lazy execute the domain module.
 	            // Only employed if the user elects to use domains.
-	            domain = require$$0$a;
+	            domain = require$$0$8;
 	        }
 	        domain.active = process.domain = null;
 	    }
@@ -41474,7 +41956,7 @@ function requireLoader () {
 
 	function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 	function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-	var path = require$$1$4;
+	var path = require$$1$3;
 	var _require = requireObject(),
 	  EmitterObj = _require.EmitterObj;
 	loader = /*#__PURE__*/function (_EmitterObj) {
@@ -41545,7 +42027,7 @@ function requireNodeLoaders () {
 	function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 	function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 	var fs = fs__default;
-	var path = require$$1$4;
+	var path = require$$1$3;
 	var Loader = requireLoader();
 	var _require = requirePrecompiledLoader(),
 	  PrecompiledLoader = _require.PrecompiledLoader;
@@ -42049,7 +42531,7 @@ function requireExpressApp () {
 	if (hasRequiredExpressApp) return expressApp;
 	hasRequiredExpressApp = 1;
 
-	var path = require$$1$4;
+	var path = require$$1$3;
 	expressApp = function express(env, app) {
 	  function NunjucksView(name, opts) {
 	    this.name = name;
@@ -42662,7 +43144,7 @@ function requirePrecompile () {
 	hasRequiredPrecompile = 1;
 
 	var fs = fs__default;
-	var path = require$$1$4;
+	var path = require$$1$3;
 	var _require = requireLib(),
 	  _prettifyError = _require._prettifyError;
 	var compiler = requireCompiler();

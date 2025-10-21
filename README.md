@@ -84,7 +84,8 @@ You can ensure the model returns data in a specific format by providing a
 
 ### Templating with Variables
 
-You can create dynamic prompts using `{{ variable }}` syntax with the usage of the `vars` parameter. 
+You can create dynamic prompts using `{{ variable }}` syntax with the usage of
+the `vars` parameter.
 
 ```yaml
 - uses: FidelusAleksander/prompt-action@v1
@@ -100,12 +101,13 @@ You can create dynamic prompts using `{{ variable }}` syntax with the usage of t
       language: Spanish
 ```
 
-> For more advanced templating features like loops, conditionals, and filters, see the [Nunjucks templating documentation](https://mozilla.github.io/nunjucks/templating.html).
+> For more advanced templating features like loops, conditionals, and filters,
+> see the
+> [Nunjucks templating documentation](https://mozilla.github.io/nunjucks/templating.html).
 
-> [!TIP]
-> Variable templating makes most
-> sense when using `prompt-file` or `system-prompt-file` inputs, as it allows
-> you to maintain reusable prompt templates with dynamic content.
+> [!TIP] Variable templating makes most sense when using `prompt-file` or
+> `system-prompt-file` inputs, as it allows you to maintain reusable prompt
+> templates with dynamic content.
 
 ## Permissions 🔒
 
