@@ -23,7 +23,7 @@ jobs:
     name: Simple Test with Prompt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Test action
         id: test
         uses: ./
@@ -34,7 +34,7 @@ jobs:
     name: Test Action full feature set
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Test action with Vars and Response Schema
         id: country-test
         uses: ./
