@@ -23,7 +23,7 @@ jobs:
     name: Simple Test with Prompt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Test action
         id: test
         uses: ./
@@ -34,7 +34,7 @@ jobs:
     name: Test Action full feature set
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Test action with Vars and Response Schema
         id: country-test
         uses: ./
@@ -47,7 +47,7 @@ jobs:
 
       - name: Check answer contains "London"
         id: keyphrase-check
-        uses: skills/action-keyphrase-checker@v1
+        uses: skills/action-keyphrase-checker@7f463836f6c105e85a182487ae4b628ff61cb904 # v1.1.0
         with:
           text: ${{ fromJSON(steps.country-test.outputs.text).capital }}
           keyphrase: 'London'
