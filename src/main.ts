@@ -56,7 +56,8 @@ export async function run() {
         responseSchema = JSON.parse(schemaContent)
       } catch (parseError) {
         throw new Error(
-          `Invalid JSON in response schema file: ${responseSchemaFile}. ${parseError instanceof Error ? parseError.message : String(parseError)}`
+          `Invalid JSON in response schema file: ${responseSchemaFile}. ${parseError instanceof Error ? parseError.message : String(parseError)}`,
+          { cause: parseError }
         )
       }
     }
