@@ -39,7 +39,6 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^3.0.0",
-    "@actions/github": "^9.1.0",
     "js-yaml": "^4.1.1",
     "nunjucks": "^3.2.4",
     "openai": "^6.34.0"
