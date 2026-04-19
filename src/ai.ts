@@ -56,7 +56,8 @@ export async function generateAIResponse(
     throw new Error(
       `Failed to generate AI response: ${
         error instanceof Error ? error.message : String(error)
-      }`
+      }`,
+      { cause: error }
     )
   }
 }

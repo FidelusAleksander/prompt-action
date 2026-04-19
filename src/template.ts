@@ -26,7 +26,8 @@ export function processTemplate(template: string, varsYaml: string): string {
     }
   } catch (error) {
     throw new Error(
-      `Invalid YAML in vars parameter: ${error instanceof Error ? error.message : String(error)}`
+      `Invalid YAML in vars parameter: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error }
     )
   }
 
@@ -41,7 +42,8 @@ export function processTemplate(template: string, varsYaml: string): string {
     return env.renderString(template, variables)
   } catch (error) {
     throw new Error(
-      `Template rendering error: ${error instanceof Error ? error.message : String(error)}`
+      `Template rendering error: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error }
     )
   }
 }
