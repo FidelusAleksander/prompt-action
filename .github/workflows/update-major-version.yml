@@ -13,6 +13,7 @@ on:
         type: choice
         description: The major version to update
         options:
+          - v2
           - v1
 
 permissions:

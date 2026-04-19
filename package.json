@@ -1,5 +1,6 @@
 {
   "name": "prompt-action",
+  "version": "2.0.0",
   "description": "GitHub Action for AI Prompts",
   "author": "FidelusAleksander",
   "type": "module",
