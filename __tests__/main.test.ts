@@ -772,4 +772,116 @@ describe('GitHub Action', () => {
       )
     })
   })
+
+  describe('Response File Output', () => {
+    it('should create response file and set both outputs', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      expect(core.setOutput).toHaveBeenCalledWith('text', mockResponse)
+      expect(core.setOutput).toHaveBeenCalledWith(
+        'response-file',
+        expect.stringContaining('ai-response-')
+      )
+    })
+
+    it('should create response file with correct content', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      const responseFileCall = core.setOutput.mock.calls.find(
+        (call) => call[0] === 'response-file'
+      )
+      expect(responseFileCall).toBeDefined()
+      const responseFilePath = responseFileCall![1] as string
+
+      expect(fs.existsSync(responseFilePath)).toBe(true)
+      expect(fs.readFileSync(responseFilePath, 'utf8')).toBe(mockResponse)
+    })
+
+    it('should use valid file path format', async () => {
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      const responseFileCall = core.setOutput.mock.calls.find(
+        (call) => call[0] === 'response-file'
+      )
+      expect(responseFileCall).toBeDefined()
+      const responseFilePath = responseFileCall![1] as string
+
+      expect(responseFilePath).toMatch(/ai-response-\d+\.txt$/)
+    })
+
+    it('should create response file even for empty responses', async () => {
+      ai.generateAIResponse.mockResolvedValue('')
+
+      core.getInput.mockImplementation((name: string) => {
+        switch (name) {
+          case 'prompt':
+            return mockPrompt
+          case 'system-prompt':
+            return mockSystemPrompt
+          case 'token':
+            return mockToken
+          case 'model':
+            return mockModel
+          default:
+            return ''
+        }
+      })
+
+      await run()
+
+      const responseFileCall = core.setOutput.mock.calls.find(
+        (call) => call[0] === 'response-file'
+      )
+      expect(responseFileCall).toBeDefined()
+      const responseFilePath = responseFileCall![1] as string
+
+      expect(fs.existsSync(responseFilePath)).toBe(true)
+      expect(fs.readFileSync(responseFilePath, 'utf8')).toBe('')
+    })
+  })
 })
