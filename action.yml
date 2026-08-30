@@ -41,6 +41,9 @@ outputs:
   text:
     description: >
       The answer to your question
+  response-file:
+    description: >
+      Path to a file containing the AI response
 runs:
   using: 'node24'
   main: 'dist/index.js'

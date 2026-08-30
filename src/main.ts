@@ -1,5 +1,7 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 import { generateAIResponse } from './ai.js'
 import { processTemplate } from './template.js'
 
@@ -72,8 +74,26 @@ export async function run() {
       responseSchema
     )
 
-    // Set output and log response
+    // Save response to a file to handle large responses
+    const tempDir = process.env.RUNNER_TEMP || os.tmpdir()
+    const responseFilePath = path.join(
+      tempDir,
+      `ai-response-${Date.now()}.txt`
+    )
+    try {
+      fs.writeFileSync(responseFilePath, response, 'utf8')
+    } catch (error) {
+      throw new Error(
+        `Failed to write response file: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        { cause: error }
+      )
+    }
+
+    // Set outputs and log response
     core.setOutput('text', response)
+    core.setOutput('response-file', responseFilePath)
     core.startGroup('AI Response')
     console.log(response)
     core.endGroup()
